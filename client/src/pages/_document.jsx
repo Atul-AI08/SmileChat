@@ -5,6 +5,7 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body>
+        <div id="photo-picker-element"></div>
         <Main />
         <NextScript />
       </body>
