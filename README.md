@@ -1,1 +1,1 @@
-# nextjs-whatsapp-clone-starter
+# whatsapp-clone
