@@ -68,7 +68,7 @@ export default function Login() {
           height={300}
           width={300}
         />
-        <span className="text-7xl">WhatsApp</span>
+        <span className="text-7xl">X-pro</span>
       </div>
       <button
         className="flex items-center justify-center gap-7 bg-search-input-container-background p-5 rounded-lg"
