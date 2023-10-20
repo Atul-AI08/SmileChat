@@ -28,7 +28,7 @@ function MessageBar() {
             />
           </div>
           <div className=" w-10 flex items-center justify-center">
-              <button onClick={sendMessage}>
+              <button>
                 <MdSend className="text-panel-header-icon cursor-pointer text-xl" title="Send Message" />
                 {/* <FaMicrophone className="text-panel-header-icon cursor-pointer text-xl"
                  title="Record" /> */}

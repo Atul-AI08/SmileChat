@@ -18,7 +18,7 @@ import IncomingVideoCall from "./common/IncomingVideoCall";
 import SearchMessages from "./Chat/SearchMessages";
 
 export default function Main() {
-  const [{ userInfo }, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
   const router = useRouter();
   const [redirectLogin, setRedirectLogin] = useState(false);
   useEffect(() => {
@@ -51,7 +51,9 @@ export default function Main() {
     <>
       <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden">
         <ChatList />
-        <Empty />
+        {
+          currentChatUser ? <Chat /> : <Empty />
+        }
       </div>
     </>
   );

@@ -16,13 +16,6 @@ export default function SearchBar() {
             type="text"
             placeholder="Search or start new chat"
             className="bg-transparent text-sm focus:outline-none text-white w-full"
-            value={contactSearch}
-            onChange={(e) =>
-              dispatch({
-                type: reducerCases.SET_CONTACT_SEARCH,
-                contactSearch: e.target.value,
-              })
-            }
           />
         </div>
       </div>
