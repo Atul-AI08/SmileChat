@@ -11,7 +11,33 @@ import EmojiPicker from "emoji-picker-react";
 
 export default function MessageBar() {
   const [message, setMessage] = useState("");
+  const emojiPickerRef = useRef(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [{ socket, currentChatUser, userInfo }, dispatch] = useStateProvider();
+
+  const handleEmojiModal = () => {
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+  const handleEmojiClick = (emoji, event) => {
+    setMessage((prevMessage) => (prevMessage += emoji.emoji));
+  };
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (event.target.id !== "emoji-open") {
+        if (
+          emojiPickerRef.current && // Check if the emoji picker ref exists
+          !emojiPickerRef.current.contains(event.target) // Check if the click is outside of the emoji picker
+        ) {
+          setShowEmojiPicker(false); // Close the emoji picker
+        }
+      }
+    };
+    document.addEventListener("click", handleOutsideClick); // Add the event listener
+    return () => {
+      document.removeEventListener("click", handleOutsideClick); // Clean up the event listener on component unmount
+    };
+  }, []);
+
   const sendMessage = async () => {
     try {
       setMessage("");
@@ -40,7 +66,7 @@ export default function MessageBar() {
   useEffect(() => {
     setMessage("");
   }, [currentChatUser]);
-  
+
   return (
     <div className="bg-panel-header-background  h-20 px-4 flex items-center gap-6  relative">
         <>
@@ -48,7 +74,17 @@ export default function MessageBar() {
             <BsEmojiSmile
               className="text-panel-header-icon cursor-pointer text-xl"
               title="Emoji"
+              onClick={handleEmojiModal}
+              id="emoji-open"
             />
+            {showEmojiPicker && (
+              <div
+                className="absolute bottom-24 left-16 z-40"
+                ref={emojiPickerRef}
+              >
+                <EmojiPicker onEmojiClick={handleEmojiClick} theme="dark" />
+              </div>
+            )}
             <ImAttachment
               className="text-panel-header-icon cursor-pointer text-xl"
               title="Attach File"
