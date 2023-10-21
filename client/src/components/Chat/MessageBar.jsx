@@ -3,17 +3,20 @@ import { BsEmojiSmile } from "react-icons/bs";
 import { ImAttachment } from "react-icons/im";
 import { FaMicrophone } from "react-icons/fa";
 import { MdSend } from "react-icons/md";
-import axios from "axios";
-import { reducerCases } from "@/context/constants";
-import { ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import { useStateProvider } from "@/context/StateContext";
+import { reducerCases } from "@/context/constants";
+import axios from "axios";
+import { ADD_IMAGE_MESSAGE_ROUTE, ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import EmojiPicker from "emoji-picker-react";
+import dynamic from "next/dynamic";
+import PhotoPicker from "../common/PhotoPicker";
 
 export default function MessageBar() {
   const [message, setMessage] = useState("");
   const emojiPickerRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [{ socket, currentChatUser, userInfo }, dispatch] = useStateProvider();
+  const [grabImage, setGrabImage] = useState(false);
 
   const handleEmojiModal = () => {
     setShowEmojiPicker(!showEmojiPicker);
@@ -37,6 +40,40 @@ export default function MessageBar() {
       document.removeEventListener("click", handleOutsideClick); // Clean up the event listener on component unmount
     };
   }, []);
+
+  const photoPickerOnChange = async (e) => {
+    const file = e.target.files[0];
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await axios.post(ADD_IMAGE_MESSAGE_ROUTE, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        params: {
+          from: userInfo.id,
+          to: currentChatUser.id,
+        },
+      });
+      if (response.status === 201) {
+        socket.current.emit("send-msg", {
+          to: currentChatUser.id,
+          from: userInfo.id,
+          message: response.data.message,
+        });
+        dispatch({
+          type: reducerCases.ADD_MESSAGE,
+          newMessage: {
+            ...response.data.message,
+          },
+          fromSelf: true,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const sendMessage = async () => {
     try {
@@ -67,6 +104,18 @@ export default function MessageBar() {
     setMessage("");
   }, [currentChatUser]);
 
+  useEffect(() => {
+    if (grabImage) {
+      const data = document.getElementById("photo-picker");
+      data.click();
+      document.body.onfocus = (e) => {
+        setTimeout(() => {
+          setGrabImage(false);
+        }, 1000);
+      };
+    }
+  }, [grabImage]);
+
   return (
     <div className="bg-panel-header-background  h-20 px-4 flex items-center gap-6  relative">
         <>
@@ -87,7 +136,8 @@ export default function MessageBar() {
             )}
             <ImAttachment
               className="text-panel-header-icon cursor-pointer text-xl"
-              title="Attach File"
+              title="Attach"
+              onClick={() => setGrabImage(true)}
             />
           </div>
           <div className="w-full rounded-lg h-10 flex items-center">
@@ -111,6 +161,7 @@ export default function MessageBar() {
               </button>
           </div>
         </>
+        {grabImage && <PhotoPicker onChange={photoPickerOnChange} />}
     </div>
   );
 }
