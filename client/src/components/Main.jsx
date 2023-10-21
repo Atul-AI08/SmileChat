@@ -11,16 +11,13 @@ import { reducerCases } from "@/context/constants";
 import axios from "axios";
 import { CHECK_USER_ROUTE, GET_MESSAGES_ROUTE, HOST } from "@/utils/ApiRoutes";
 import Empty from "./Empty";
-import VideoCall from "./Call/VideoCall";
-import VoiceCall from "./Call/VoiceCall";
-import IncomingCall from "./common/IncomingCall";
-import IncomingVideoCall from "./common/IncomingVideoCall";
-import SearchMessages from "./Chat/SearchMessages";
 
 export default function Main() {
   const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
   const router = useRouter();
+  const socket = useRef();
   const [redirectLogin, setRedirectLogin] = useState(false);
+  const [socketEvent, setSocketEvent] = useState(false);
   useEffect(() => {
     if (redirectLogin) router.push("/login");
   }, [redirectLogin]);
@@ -47,6 +44,43 @@ export default function Main() {
       });
     }
   });
+
+  useEffect(() => {
+    if (userInfo) {
+      socket.current = io(HOST);
+      socket.current.emit("add-user", userInfo.id);
+      dispatch({ type: reducerCases.SET_SOCKET, socket });
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    if (socket.current && !socketEvent) {
+      socket.current.on("msg-recieve", (data) => {
+        dispatch({
+          type: reducerCases.ADD_MESSAGE,
+          newMessage: {
+            ...data.message,
+          },
+        });
+      });
+      setSocketEvent(true);
+    }
+  }, [socket.current]);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      const {
+        data: { messages },
+      } = await axios.get(
+        `${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`
+      );
+      dispatch({ type: reducerCases.SET_MESSAGES, messages });
+    };
+    if (currentChatUser){
+      getMessages();
+    }
+  }, [currentChatUser]);
+
   return (
     <>
       <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden">
