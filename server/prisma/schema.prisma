@@ -18,6 +18,7 @@ model User{
   about String @default("")
   sentMessages Messages[] @relation("sentMessages")
   recievedMessages Messages[] @relation("recievedMessages")
+  lastSeen DateTime @default(now())
 }
 
 model Messages {

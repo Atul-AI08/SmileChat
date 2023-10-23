@@ -23,6 +23,7 @@ export default function ChatLIstItem({ data, isContactPage = false }) {
           profilePicture: data.profilePicture,
           email: data.email,
           id: userInfo.id === data.senderId ? data.recieverId : data.senderId,
+          lastSeen: data.lastSeen
         },
       });
     } else {

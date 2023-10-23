@@ -7,6 +7,7 @@ import { IoVideocam } from "react-icons/io5";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import ContextMenu from "../common/ContextMenu";
+import { calculateTime } from "@/utils/CalculateTime";
 
 function ChatHeader() {
   const [{ userInfo, currentChatUser, onlineUsers }, dispatch] = useStateProvider();
@@ -40,7 +41,7 @@ function ChatHeader() {
         <div className="flex flex-col">
           <span className="text-primary-strong">{currentChatUser?.name}</span>
           <span className="text-secondary text-sm">
-            {onlineUsers.includes(currentChatUser.id) ? "online" : "offline"}
+            {onlineUsers.includes(currentChatUser.id) ? "Online" : "Last seen at " + calculateTime(currentChatUser?.lastSeen)}
           </span>
         </div>
       </div>

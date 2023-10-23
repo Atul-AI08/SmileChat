@@ -42,6 +42,28 @@ export const onBoardUser = async (request, response, next) => {
   }
 };
 
+export const updateLastSeen = async (request, response, next) => {
+  try {
+    const {
+      userId,
+      currentDate,
+    } = request.body;
+    const prisma = getPrismaInstance();
+    await prisma.user.update({
+      data: {
+        lastSeen: currentDate
+      },
+      where: {
+        id: userId,
+      },
+    });
+
+    return response.json({ msg: "User updated successfully", status: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getAllUsers = async (req, res, next) => {
   try {
     const prisma = getPrismaInstance();
@@ -53,6 +75,7 @@ export const getAllUsers = async (req, res, next) => {
         name: true,
         profilePicture: true,
         about: true,
+        lastSeen: true
       },
     });
     const usersGroupedByInitialLetter = {};

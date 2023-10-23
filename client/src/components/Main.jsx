@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import axios from "axios";
-import { CHECK_USER_ROUTE, GET_MESSAGES_ROUTE, HOST } from "@/utils/ApiRoutes";
+import { CHECK_USER_ROUTE, GET_MESSAGES_ROUTE, updateLastSeen, HOST } from "@/utils/ApiRoutes";
 import Empty from "./Empty";
 import SearchMessages from "./Chat/SearchMessages";
 
@@ -32,7 +32,6 @@ export default function Main() {
       if (!data.status) {
         router.push("/login");
       }
-
       dispatch({
         type: reducerCases.SET_USER_INFO,
         userInfo: {
@@ -41,10 +40,39 @@ export default function Main() {
           name: data?.data?.name,
           profileImage: data?.data?.profilePicture,
           status: data?.data?.about,
+          lastSeen: data?.data?.lastSeen
         },
       });
     }
   });
+  
+  const updateLS = async (currentUser) => {
+    if (currentUser !== undefined) {
+      const currentDate = new Date();
+      try {
+        const { data } = await axios.post(updateLastSeen, {
+          userId: currentUser,
+          currentDate: currentDate,
+        });
+      } catch (error) {
+        console.log({ error });
+      }
+    } else {
+      console.log("userInfo.id is undefined, cannot make the request.");
+    }
+  };  
+
+  function beforeUnloadHandler(event) {
+    updateLS(userInfo.id);
+    event.returnValue = 'Are you sure you want to leave?';
+  }
+  useEffect(() => {
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, [userInfo]);
 
   useEffect(() => {
     if (userInfo) {

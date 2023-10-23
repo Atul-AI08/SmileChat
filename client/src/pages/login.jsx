@@ -28,7 +28,6 @@ export default function Login() {
         const { data } = await axios.post(CHECK_USER_ROUTE, {
           email,
         });
-
         if (!data.status) {
           dispatch({ type: reducerCases.SET_NEW_USER, newUser: true });
           dispatch({
@@ -50,6 +49,7 @@ export default function Login() {
               name: data.data.name,
               profileImage: data.data.profilePicture,
               status: data.data.about,
+              lastSeen: data.data.lastSeen
             },
           });
           router.push("/");
