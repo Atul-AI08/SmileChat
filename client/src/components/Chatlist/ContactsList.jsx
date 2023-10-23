@@ -13,6 +13,25 @@ function ContactsList() {
   const [searchContacts, setSearchContacts] = useState([]);
 
   useEffect(() => {
+    if (searchTerm.length) {
+      const filteredData = {};
+
+      Object.keys(allContacts).forEach((key) => {
+        filteredData[key] = allContacts[key].filter((obj) =>
+          obj.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        if (!filteredData[key].length) {
+          delete filteredData[key];
+        }
+      });
+
+      setSearchContacts(filteredData);
+    } else {
+      setSearchContacts(allContacts);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
     const getContacts = async () => {
       try {
         const {

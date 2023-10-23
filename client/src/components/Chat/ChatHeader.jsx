@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "../common/Avatar";
-import { MdCall } from "react-icons/md";
-import { IoVideocam } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiSearchAlt2 } from "react-icons/bi";
+import { MdCall } from "react-icons/md";
+import { IoVideocam } from "react-icons/io5";
 import { useStateProvider } from "@/context/StateContext";
+import { reducerCases } from "@/context/constants";
+import ContextMenu from "../common/ContextMenu";
 
 function ChatHeader() {
   const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
@@ -26,6 +28,7 @@ function ChatHeader() {
         />
         <BiSearchAlt2
           className="text-panel-header-icon cursor-pointer text-xl"
+          onClick={() => dispatch({ type: reducerCases.SET_MESSAGES_SEARCH })}
         />
         <BsThreeDotsVertical
           className="text-panel-header-icon cursor-pointer text-xl"
