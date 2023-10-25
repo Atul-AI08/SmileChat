@@ -6,7 +6,7 @@ import { MdSend } from "react-icons/md";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import axios from "axios";
-import { ADD_IMAGE_MESSAGE_ROUTE, ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
+import { ADD_FILE_MESSAGE_ROUTE, ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import EmojiPicker from "emoji-picker-react";
 import dynamic from "next/dynamic";
 import PhotoPicker from "../common/PhotoPicker";
@@ -51,8 +51,8 @@ export default function MessageBar() {
 
     try {
       const formData = new FormData();
-      formData.append("image", file);
-      const response = await axios.post(ADD_IMAGE_MESSAGE_ROUTE, formData, {
+      formData.append("file", file);
+      const response = await axios.post(ADD_FILE_MESSAGE_ROUTE, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

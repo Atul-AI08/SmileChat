@@ -5,6 +5,7 @@ import { reducerCases } from "@/context/constants";
 import { FaCamera, FaMicrophone } from "react-icons/fa";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
+import { FileIcon } from 'react-file-icon';
 
 export default function ChatLIstItem({ data, isContactPage = false }) {
   const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
@@ -77,10 +78,13 @@ export default function ChatLIstItem({ data, isContactPage = false }) {
                       Audio
                     </span>
                   )}
-                  {data.type === "image" && (
+                  {data.type === "file" && (
                     <span className="flex gap-1 items-center">
-                      <FaCamera className="text-panel-header-icon" />
-                      Image
+                      {/* <FaCamera className="text-panel-header-icon" /> */}
+                      <div className="flex h-4 w-4 text-panel-header-icon">
+                        <FileIcon color="#A8A8A8" type="document" radius={4} />
+                      </div>
+                      File
                     </span>
                   )}
                 </div>

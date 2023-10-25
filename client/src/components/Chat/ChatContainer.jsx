@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
-import ImageMessage from "./ImageMessage";
+import FileMessage from "./FileMessage";
 
 const VoiceMessage = dynamic(() => import("@/components/Chat/VoiceMessage"), {
   ssr: false,
@@ -51,7 +51,7 @@ export default function ChatContainer() {
                     </div>
                   </div>
                 )}
-                {message.type === "image" && <ImageMessage message={message} />}
+                {message.type === "file" && <FileMessage message={message} />}
                 {message.type === "audio" && <VoiceMessage message={message} />}
               </div>
             ))}
