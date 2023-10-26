@@ -34,7 +34,11 @@ export default function ChatLIstItem({ data, isContactPage = false }) {
   };
   return (
     <div
-      className={`flex cursor-pointer items-center hover:bg-background-default-hover`}
+      className={`flex cursor-pointer items-center ${
+        currentChatUser?.id === data.id && !isContactPage
+          ? "bg-background-default-hover"
+          : "hover:bg-background-default-hover"
+      }`}
       onClick={handleContactClick}
     >
       <div className="min-w-fit px-5 pt-3 pb-1 ">

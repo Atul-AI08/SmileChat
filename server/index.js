@@ -42,4 +42,16 @@ io.on("connection", (socket) => {
             .emit("msg-recieve", { from: data.from, message: data.message });
         }
     });
+    socket.on("signout", (id) => {
+      onlineUsers.delete(id);
+      socket.broadcast.emit("online-users", {
+        onlineUsers: Array.from(onlineUsers.keys()),
+      });
+    });
+    socket.on("mark-read", ({ id, recieverId }) => {
+      const sendUserSocket = onlineUsers.get(id);
+      if (sendUserSocket) {
+        socket.to(sendUserSocket).emit("mark-read-recieve", { id, recieverId });
+      }
+    });
 });

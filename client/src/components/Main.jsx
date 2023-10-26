@@ -14,7 +14,15 @@ import Empty from "./Empty";
 import SearchMessages from "./Chat/SearchMessages";
 
 export default function Main() {
-  const [{ userInfo, currentChatUser, messageSearch }, dispatch] = useStateProvider();
+  const [
+    {
+      userInfo,
+      currentChatUser,
+      messageSearch,
+      userContacts,
+    },
+    dispatch,
+  ] = useStateProvider();
   const router = useRouter();
   const socket = useRef();
   const [redirectLogin, setRedirectLogin] = useState(false);
@@ -63,6 +71,7 @@ export default function Main() {
   };  
 
   function beforeUnloadHandler(event) {
+    socket.current.emit("signout", userInfo.id);
     updateLS(userInfo.id);
     event.returnValue = 'Are you sure you want to leave?';
   }
@@ -92,6 +101,19 @@ export default function Main() {
           },
         });
       });
+      socket.current.on("online-users", ({ onlineUsers }) => {
+        dispatch({
+          type: reducerCases.SET_ONLINE_USERS,
+          onlineUsers,
+        });
+      });
+      socket.current.on("mark-read-recieve", ({ id, recieverId }) => {
+        dispatch({
+          type: reducerCases.SET_MESSAGES_READ,
+          id,
+          recieverId,
+        });
+      });
       setSocketEvent(true);
     }
   }, [socket.current]);
@@ -105,7 +127,11 @@ export default function Main() {
       );
       dispatch({ type: reducerCases.SET_MESSAGES, messages });
     };
-    if (currentChatUser){
+    if (
+      currentChatUser &&
+      userContacts.findIndex((contact) => contact.id === currentChatUser.id) !==
+        -1
+    ) {
       getMessages();
     }
   }, [currentChatUser]);

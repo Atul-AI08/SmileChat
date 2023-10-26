@@ -92,3 +92,31 @@ export const getAllUsers = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateProfile = async (request, response, next) => {
+  console.log("function");
+  try {
+    const {
+      userId,
+      name,
+      about,
+      image,
+    } = request.body;
+
+    const prisma = getPrismaInstance();
+    await prisma.user.update({
+      data: {
+        name: name,
+        about: about,
+        profilePicture: image,
+      },
+      where: {
+        id: userId,
+      },
+    });
+
+    return response.json({ msg: "User updated successfully", status: true });
+  } catch (error) {
+    next(error);
+  }
+};

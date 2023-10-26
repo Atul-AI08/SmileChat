@@ -11,9 +11,24 @@ const VoiceMessage = dynamic(() => import("@/components/Chat/VoiceMessage"), {
 
 export default function ChatContainer() {
   const [{ messages, currentChatUser, userInfo }] = useStateProvider();
+
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const lastMessage =
+      container.lastElementChild.lastElementChild.lastElementChild
+        .lastElementChild;
+
+    if (lastMessage) {
+      lastMessage.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
     <div
       className="h-[80vh] w-full relative flex-grow overflow-auto custom-scrollbar "
+      ref={containerRef}
     >
       <div className="bg-chat-background bg-fixed h-full w-full opacity-5 fixed left-0 top-0 z-0"></div>
       <div className="mx-10 my-6 relative bottom-0 z-40 left-0 ">
