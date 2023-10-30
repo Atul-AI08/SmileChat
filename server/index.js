@@ -33,6 +33,9 @@ io.on("connection", (socket) => {
     global.chatSocket = socket;
     socket.on("add-user", (userId) => {
       onlineUsers.set(userId, socket.id);
+      socket.broadcast.emit("online-users", {
+        onlineUsers: Array.from(onlineUsers.keys()),
+      });
     });
     socket.on("send-msg", (data) => {
         const sendUserSocket = onlineUsers.get(data.to);
@@ -53,5 +56,28 @@ io.on("connection", (socket) => {
       if (sendUserSocket) {
         socket.to(sendUserSocket).emit("mark-read-recieve", { id, recieverId });
       }
+    });
+    socket.on("reject-video-call", (data) => {
+      const sendUserSocket = onlineUsers.get(data.from);
+      if (sendUserSocket) {
+        socket.to(sendUserSocket).emit("video-call-rejected");
+      }
+    });
+    socket.on("outgoing-video-call", (data) => {
+      const sendUserSocket = onlineUsers.get(data.to);
+      if (sendUserSocket) {
+        socket.to(sendUserSocket).emit("incoming-video-call", {
+          from: data.from,
+          roomId: data.roomId,
+          callType: data.callType,
+        });
+      } else {
+        const senderSocket = onlineUsers.get(data.from);
+        socket.to(senderSocket).emit("video-call-offline");
+      }
+    });
+    socket.on("accept-incoming-call", ({ id }) => {
+      const sendUserSocket = onlineUsers.get(id);
+      socket.to(sendUserSocket).emit("accept-call");
     });
 });
