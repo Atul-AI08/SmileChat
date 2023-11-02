@@ -10,8 +10,7 @@ import ContextMenu from "../common/ContextMenu";
 import { calculateTime } from "@/utils/CalculateTime";
 
 function ChatHeader() {
-  const [{ userInfo, currentChatUser, onlineUsers }, dispatch] = useStateProvider();
-
+  const [{ userInfo, currentChatUser, onlineUsers, messages }, dispatch] = useStateProvider();
   const [contextMenuCordinates, setContextMenuCordinates] = useState({
     x: 0,
     y: 0,
@@ -20,7 +19,7 @@ function ChatHeader() {
 
   const showContextMenu = (e) => {
     e.preventDefault();
-    setContextMenuCordinates({ x: e.pageX - 50, y: e.pageY + 20 });
+    setContextMenuCordinates({ x: e.pageX - 130, y: e.pageY + 20 });
     setIsContextMenuVisible(true);
   };
 
@@ -32,6 +31,25 @@ function ChatHeader() {
         dispatch({ type: reducerCases.SET_EXIT_CHAT });
       },
     },
+    {
+      name: "Export Chat",
+      callBack: async () => {
+        const filteredMessages = messages.filter(msg => msg.type !== 'file' && msg.type !== 'audio');
+        const formattedText = filteredMessages.map(({ id, senderId, receiverId, type, message, messageStatus, createdAt }) => {
+          let sender = (senderId == userInfo?.id) ? "Me" : currentChatUser?.name;
+          let reciever = (senderId == userInfo?.id) ? currentChatUser?.name : "Me";
+          return `Sender: ${sender}\nReceiver: ${reciever}\nMessage: ${message}\nMessage Status: ${messageStatus}\nSent : ${calculateTime(createdAt)}\n---------------------------------------\n`;
+        }).join('');
+        const file = new Blob([formattedText], {
+          type: 'text/plain'
+        });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(file);
+        a.download = `messages_${currentChatUser?.name}.txt`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      },
+    }
   ];
 
   const handleVideoCall = () => {
@@ -47,7 +65,7 @@ function ChatHeader() {
   };
 
   return (
-  <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background z-10">
+  <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background-light dark:bg-panel-header-background-dark z-10">
       <div className="flex items-center justify-center gap-6">
         <Avatar type="sm" image={currentChatUser?.profilePicture} />
         <div className="flex flex-col">
@@ -59,18 +77,18 @@ function ChatHeader() {
       </div>
       <div className="flex gap-6 ">
         <MdCall
-          className="text-panel-header-icon cursor-pointer text-xl"
+          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
         />
         <IoVideocam
-          className="text-panel-header-icon cursor-pointer text-xl"
+          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
           onClick={handleVideoCall}
         />
         <BiSearchAlt2
-          className="text-panel-header-icon cursor-pointer text-xl"
+          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
           onClick={() => dispatch({ type: reducerCases.SET_MESSAGES_SEARCH })}
         />
         <BsThreeDotsVertical
-          className="text-panel-header-icon cursor-pointer text-xl"
+          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
           onClick={(e) => showContextMenu(e)}
           id="context-opener"
         />

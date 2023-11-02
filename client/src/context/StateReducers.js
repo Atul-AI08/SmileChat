@@ -241,8 +241,6 @@ const reducer = (state, action) => {
       return {
         ...state,
         videoCall: undefined,
-        voiceCall: undefined,
-        incomingVoiceCall: undefined,
         incomingVideoCall: undefined,
       };
     default:

@@ -11,28 +11,36 @@ function Container({ data }) {
   const [localStream, setLocalStream] = useState(undefined);
   const [publishStream, setPublishStream] = useState(undefined);
   const [callStarted, setCallStarted] = useState(false);
-  const [callAccepted, setcallAccepted] = useState(false);
-  const [ stream, setStream ] = useState()
-  const myVideo = useRef()
-	const userVideo = useRef()
-	const connectionRef= useRef()
-
+  const [callAccepted, setCallAccepted] = useState(false);
+  const userVideo = useRef();
+  const connectionRef = useRef();
+  const myVideo = useRef();
+  
   useEffect(() => {
-    if (data.type === "out-going")
-      socket.current.on("accept-call", () => setcallAccepted(true));
+    if (data.type === "out-going"){
+      socket.current.on("accept-call", () => setCallAccepted(true));
+    }
     else {
-      setTimeout(() => {
-        setcallAccepted(true);
-      }, 1000);
+      setCallAccepted(true);
     }
   }, [data]);
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-      setStream(stream)
-        myVideo.current.srcObject = stream
-    })
-  }, []);
+    const startCall = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        if (myVideo.current) {
+          myVideo.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing media devices:', error);
+      }
+    };
+    if (callAccepted && !callStarted) {
+      startCall();
+      setCallStarted(true);
+    }
+  }, [callAccepted]);
 
   const endCall = () => {
     const id = data.id;
@@ -40,7 +48,6 @@ function Container({ data }) {
       from: id,
     });
     dispatch({ type: reducerCases.END_CALL });
-    connectionRef.current.destroy()
   };
 
   return (
@@ -64,12 +71,8 @@ function Container({ data }) {
           />
         </div>
       )}
-      <div className="my-5 relative" id="remote-video">
-        <div className="absolute bottom-5 right-5" id="local-video">
-          {<video playsInline ref={userVideo} autoPlay style={{ width: "300px"}} />}
-          {stream &&  <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
-        </div>
-      </div>
+      <video playsInline autoPlay className="my-5 relative" ref={myVideo}></video>
+      {/* <video playsInline autoPlay className="absolute bottom-5 right-5" ref={myVideo}></video> */}
 
       <div
         className="rounded-full h-16 w-16 bg-red-600 flex items-center justify-center"

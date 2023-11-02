@@ -3,7 +3,7 @@ import React from "react";
 
 function Empty() {
   return (
-    <div className="border-conversation-border border-l w-full bg-panel-header-background flex flex-col h-[100vh] border-b-4 border-b-icon-green items-center justify-center">
+    <div className="border-conversation-border border-l w-full bg-panel-header-background-light dark:bg-panel-header-background-dark flex flex-col h-[100vh] border-b-4 border-b-icon-green items-center justify-center">
       {/* <Image src="/whatsapp.gif" alt="whatsapp-gif" height={300} width={300} /> */}
     </div>
   );
