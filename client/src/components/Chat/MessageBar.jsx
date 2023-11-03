@@ -122,12 +122,12 @@ export default function MessageBar() {
   }, [grabImage]);
 
   return (
-    <div className="bg-panel-header-background  h-20 px-4 flex items-center gap-6  relative">
+    <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark  h-20 px-4 flex items-center gap-6  relative">
       {!showAudioRecorder && (
         <>
           <div className="flex gap-6">
             <BsEmojiSmile
-              className="text-panel-header-icon cursor-pointer text-xl"
+              className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
               title="Emoji"
               onClick={handleEmojiModal}
               id="emoji-open"
@@ -141,7 +141,7 @@ export default function MessageBar() {
               </div>
             )}
             <ImAttachment
-              className="text-panel-header-icon cursor-pointer text-xl"
+              className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
               title="Attach"
               onClick={() => setGrabImage(true)}
             />
@@ -159,13 +159,13 @@ export default function MessageBar() {
               {message.length ? (
                 <button onClick={sendMessage}>
                   <MdSend
-                    className="text-panel-header-icon cursor-pointer text-xl"
+                    className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
                     title="Send"
                   />
                 </button>
               ) : (
                 <FaMicrophone
-                  className="text-panel-header-icon cursor-pointer text-xl"
+                  className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
                   title="Record"
                   onClick={() => setShowAudioRecorder(true)}
                 />

@@ -1,19 +1,21 @@
 import { reducerCases } from "./constants";
 
 export const initialState = {
-    userInfo: undefined,
-    newUser: false,
-    contactsPage: false,
-    currentChatUser: undefined,
-    messages: [],
-    socket: undefined,
-    messageSearch: false,
-    userContacts: [],
-    onlineUsers: [],
-    contactSearch: "",
-    filteredContacts: [],
-    videoCall: undefined,
-    incomingVideoCall: undefined,
+  userInfo: undefined,
+  newUser: false,
+  contactsPage: false,
+  messageSearch: false,
+  currentChatUser: undefined,
+  socket: undefined,
+  messages: [],
+  userContacts: [],
+  videoCall: undefined,
+  voiceCall: undefined,
+  incomingVoiceCall: undefined,
+  incomingVideoCall: undefined,
+  onlineUsers: [],
+  contactSearch: "",
+  filteredContacts: [],
 };
 
 const reducer = (state, action) => {
@@ -32,6 +34,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         contactsPage: !state.contactsPage,
+      };
+    case reducerCases.SET_MESSAGES_SEARCH:
+      return {
+        ...state,
+        messageSearch: !state.messageSearch,
       };
     case reducerCases.CHANGE_CURRENT_CHAT_USER: {
       if (action.user) {
@@ -62,11 +69,6 @@ const reducer = (state, action) => {
         };
       }
     }
-    case reducerCases.SET_MESSAGES:
-      return {
-        ...state,
-        messages: action.messages,
-      };
     case reducerCases.SET_SOCKET:
       return {
         ...state,
@@ -196,21 +198,80 @@ const reducer = (state, action) => {
         };
       }
     }
-    case reducerCases.SET_MESSAGES_SEARCH:
+    case reducerCases.SET_MESSAGES:
       return {
         ...state,
-        messageSearch: !state.messageSearch,
+        messages: action.messages,
       };
     case reducerCases.SET_USER_CONTACTS:
       return {
         ...state,
         userContacts: action.userContacts,
       };
+    case reducerCases.SET_VIDEO_CALL:
+      return {
+        ...state,
+        videoCall: action.videoCall,
+      };
+    case reducerCases.SET_VOICE_CALL:
+      return {
+        ...state,
+        voiceCall: action.voiceCall,
+      };
+    case reducerCases.END_CALL:
+      return {
+        ...state,
+        videoCall: undefined,
+        voiceCall: undefined,
+        incomingVoiceCall: undefined,
+        incomingVideoCall: undefined,
+      };
+    case reducerCases.SET_INCOMING_VOICE_CALL:
+      return {
+        ...state,
+        incomingVoiceCall: action.incomingVoiceCall,
+      };
+    case reducerCases.SET_INCOMING_VIDEO_CALL:
+      return {
+        ...state,
+        incomingVideoCall: action.incomingVideoCall,
+      };
+    case reducerCases.SET_EXIT_CHAT:
+      return {
+        ...state,
+        currentChatUser: undefined,
+        messages: [],
+      };
+    case reducerCases.SET_MESSAGES_READ: {
+      if (state.userInfo.id === action.id) {
+        const clonedMessages = [...state.messages];
+        const clonedContacts = [...state.userContacts];
+        clonedMessages.forEach(
+          (msg, index) => (clonedMessages[index].messageStatus = "read")
+        );
+        const index = clonedContacts.findIndex(
+          (contact) => contact.id === action.recieverId
+        );
+        if (index !== -1) {
+          clonedContacts[index].messageStatus = "read";
+        }
+        return {
+          ...state,
+          messages: clonedMessages,
+          userContacts: clonedContacts,
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
+    }
     case reducerCases.SET_ONLINE_USERS:
       return {
         ...state,
         onlineUsers: action.onlineUsers,
       };
+
     case reducerCases.SET_CONTACT_SEARCH: {
       const filteredContacts = state.userContacts.filter((contact) =>
         contact.name.toLowerCase().includes(action.contactSearch.toLowerCase())
@@ -221,30 +282,8 @@ const reducer = (state, action) => {
         filteredContacts,
       };
     }
-    case reducerCases.SET_EXIT_CHAT:
-      return {
-        ...state,
-        currentChatUser: undefined,
-        messages: [],
-      };
-    case reducerCases.SET_VIDEO_CALL:
-      return {
-        ...state,
-        videoCall: action.videoCall,
-      };
-    case reducerCases.SET_INCOMING_VIDEO_CALL:
-      return {
-          ...state,
-        incomingVideoCall: action.incomingVideoCall,
-      };
-    case reducerCases.END_CALL:
-      return {
-        ...state,
-        videoCall: undefined,
-        incomingVideoCall: undefined,
-      };
     default:
-        return state;
+      return state;
   }
 };
 

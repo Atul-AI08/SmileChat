@@ -15,7 +15,7 @@ export default function FileMessage({ message }) {
   const fileName = fileParts[0].slice(13, fileParts[0].length);
   return (
     <div
-      className={`text-white px-2 py-[5px] text-sm rounded-md flex gap-2 items-end max-w-[75%] p-1 rounded-lg ${
+      className={`text-white px-2 py-[5px] text-sm flex gap-2 items-end max-w-[75%] p-1 rounded-lg ${
         message.senderId === currentChatUser.id
           ? "bg-incoming-background"
           : "bg-outgoing-background"

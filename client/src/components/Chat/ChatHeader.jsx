@@ -9,8 +9,10 @@ import { reducerCases } from "@/context/constants";
 import ContextMenu from "../common/ContextMenu";
 import { calculateTime } from "@/utils/CalculateTime";
 
-function ChatHeader() {
-  const [{ userInfo, currentChatUser, onlineUsers, messages }, dispatch] = useStateProvider();
+export default function ChatHeader() {
+  const [{ userInfo, currentChatUser, onlineUsers }, dispatch] =
+    useStateProvider();
+
   const [contextMenuCordinates, setContextMenuCordinates] = useState({
     x: 0,
     y: 0,
@@ -52,6 +54,18 @@ function ChatHeader() {
     }
   ];
 
+  const handleVoiceCall = () => {
+    dispatch({
+      type: reducerCases.SET_VOICE_CALL,
+      voiceCall: {
+        ...currentChatUser,
+        type: "out-going",
+        callType: "audio",
+        roomId: Date.now(),
+      },
+    });
+  };
+
   const handleVideoCall = () => {
     dispatch({
       type: reducerCases.SET_VIDEO_CALL,
@@ -78,6 +92,7 @@ function ChatHeader() {
       <div className="flex gap-6 ">
         <MdCall
           className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+          onClick={handleVoiceCall}
         />
         <IoVideocam
           className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
@@ -104,5 +119,3 @@ function ChatHeader() {
     </div>
   );
 }
-
-export default ChatHeader;

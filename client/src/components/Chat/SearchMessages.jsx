@@ -36,12 +36,12 @@ function SearchMessages() {
       <div className="overflow-auto custom-scrollbar h-full">
         <div className="flex items-center flex-col w-full">
           <div className=" flex  px-5 items-center gap-3 h-14 w-full">
-            <div className="bg-panel-header-background flex items-center gap-5 px-3 py-[6px] rounded-lg flex-grow">
+            <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark flex items-center gap-5 px-3 py-[6px] rounded-lg flex-grow">
               <div>
                 {searchBarFocus ? (
                   <BiArrowBack className="text-icon-green cursor-pointer text-l" />
                 ) : (
-                  <BiSearchAlt2 className="text-panel-header-icon cursor-pointer text-l" />
+                  <BiSearchAlt2 className="text-panel-header-icon-light dark:text-panel-header-background-dark cursor-pointer text-l" />
                 )}
               </div>
               <div className="">

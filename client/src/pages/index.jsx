@@ -1,7 +1,5 @@
 import Main from "@/components/Main";
 
-function index() {
+export default function Index() {
   return <Main />;
 }
-
-export default index;
