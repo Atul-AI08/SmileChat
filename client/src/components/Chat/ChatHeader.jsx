@@ -10,7 +10,7 @@ import ContextMenu from "../common/ContextMenu";
 import { calculateTime } from "@/utils/CalculateTime";
 
 export default function ChatHeader() {
-  const [{ userInfo, currentChatUser, onlineUsers }, dispatch] =
+  const [{ userInfo, currentChatUser, onlineUsers,messages }, dispatch] =
     useStateProvider();
 
   const [contextMenuCordinates, setContextMenuCordinates] = useState({

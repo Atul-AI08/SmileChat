@@ -13,14 +13,9 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// let messaging= null;
-// if (process.browser) {
-//   messaging = getMessaging(app);
-// }
-const messaging = getMessaging(app);
+
+const messaging = typeof window !== "undefined" ? getMessaging(app) : null;
+
+export default messaging;
 export const firebaseAuth = getAuth(app);
-// if(messaging){
-//   module.exports={firebaseAuth,messaging,app}
-// }else{
-//   module.exports={firebaseAuth,app}
-// }
+
