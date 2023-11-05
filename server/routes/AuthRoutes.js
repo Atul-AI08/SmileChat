@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   checkUser,
-  generateToken,
   getAllUsers,
   onBoardUser,
   updateLastSeen,
@@ -13,7 +12,6 @@ const router = Router();
 router.post("/check-user", checkUser);
 router.post("/onBoardUser", onBoardUser);
 router.get("/get-contacts", getAllUsers);
-router.get("/generate-token/:userId", generateToken);
 router.post("/update-last-seen", updateLastSeen);
 router.post("/update-profile", updateProfile);
 

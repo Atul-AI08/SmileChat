@@ -121,29 +121,3 @@ export const updateProfile = async (request, response, next) => {
     next(error);
   }
 };
-
-export const generateToken = (req, res, next) => {
-  try {
-    const appID = parseInt(process.env.ZEGO_APP_ID);
-    const serverSecret = process.env.ZEGO_APP_SECRET;
-    const userId = req.params.userId;
-    const effectiveTimeInSeconds = 3600;
-    const payload = "";
-    if (appID && serverSecret && userId) {
-      const token = generateToken04(
-        appID,
-        userId,
-        serverSecret,
-        effectiveTimeInSeconds,
-        payload
-      );
-      res.status(200).json({ token });
-    }
-    return res
-      .status(400)
-      .send("User id, app id and server secret is required");
-  } catch (err) {
-    console.log({ err });
-    next(err);
-  }
-};
