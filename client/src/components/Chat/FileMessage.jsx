@@ -4,6 +4,7 @@ import { calculateTime } from "@/utils/CalculateTime";
 import React from "react";
 import MessageStatus from "../common/MessageStatus";
 import { FileIcon } from 'react-file-icon';
+import ImageMessage from "./ImageMessage";
 
 export default function FileMessage({ message }) {
   const [{ currentChatUser, userInfo }] = useStateProvider();
@@ -21,24 +22,28 @@ export default function FileMessage({ message }) {
           : "bg-outgoing-background"
       }`}
     >
-      <div className="flex gap-3">
-        <span className="flex items-center gap-2">
-          <div className="flex h-11 w-11 px-1 py-[1px]">
-            <FileIcon extension={fileType} color="mistyrose" type={(fileType=="png" || fileType=="jpg")? "image":"document"} />
+      {(fileType==="png" || fileType==="jpg") && <ImageMessage message={message} />}
+      
+      {fileType!=="png" && fileType!=="jpg" && (
+        <div className="flex gap-3">
+          <span className="flex items-center gap-2">
+            <div className="flex h-11 w-11 px-1 py-[1px]">
+              <FileIcon extension={fileType} color="mistyrose" type="document" />
+            </div>
+            <div><a href={`${HOST}/${message.message}`} download target="_blank">{fileName}</a></div>
+          </span>
+          <div className="flex items-end gap-1">
+            <span className="text-bubble-meta text-[11px] pt-1 min-w-fit">
+              {calculateTime(message.createdAt)}
+            </span>
+            <span className="text-bubble-meta">
+              {message.senderId === userInfo.id && (
+                <MessageStatus messageStatus={message.messageStatus} />
+              )}
+            </span>
           </div>
-          <div><a href={`${HOST}/${message.message}`} download target="_blank">{fileName}</a></div>
-        </span>
-        <div className="flex items-end gap-1">
-          <span className="text-bubble-meta text-[11px] pt-1 min-w-fit">
-            {calculateTime(message.createdAt)}
-          </span>
-          <span className="text-bubble-meta">
-            {message.senderId === userInfo.id && (
-              <MessageStatus messageStatus={message.messageStatus} />
-            )}
-          </span>
         </div>
-      </div>
+      )}
     </div>
   );
 }

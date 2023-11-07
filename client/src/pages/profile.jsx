@@ -85,7 +85,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="bg-panel-header-background h-screen w-screen text-white flex flex-col items-center justify-center">
+    <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark h-screen w-screen text-white flex flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-2">
         <Image
           src="/whatsapp.gif"
@@ -93,11 +93,11 @@ export default function Profile() {
           height={300}
           width={300}
         />
-        <span className="text-7xl">WhatsApp</span>
+        <span className="text-7xl">Webchat-Pro</span>
       </div>
       <div></div>
       <h2 className="text-2xl ">Your profile</h2>
-      <div className="flex gap-6 mt-6 ">
+      <div className="flex gap-6 mt-6">
         <div className="flex flex-col items-center justify-between mt-5 gap-6">
           <Input name="Display Name" state={name} setState={setName} label />
           <Input name="About" state={about} setState={setAbout} label />

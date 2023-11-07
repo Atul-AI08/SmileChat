@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Avatar from "../common/Avatar";
-import { BsFillChatLeftTextFill, BsThreeDotsVertical } from "react-icons/bs";
+import { BsFillChatLeftTextFill, BsThreeDotsVertical, BsCameraVideoFill } from "react-icons/bs";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import { useRouter } from "next/router";
@@ -38,6 +38,10 @@ export default function ChatListHeader() {
     },
   ];
 
+  const startVideoConference = () => {
+    router.push("/VideoConference");
+  }
+
   const handleAllContactsPage = () => {
     dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
   };
@@ -52,6 +56,11 @@ export default function ChatListHeader() {
           className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
           title="New chat"
           onClick={handleAllContactsPage}
+        />
+        <BsCameraVideoFill
+          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+          title="Video Conference"
+          onClick={startVideoConference}
         />
         <>
           <BsThreeDotsVertical
