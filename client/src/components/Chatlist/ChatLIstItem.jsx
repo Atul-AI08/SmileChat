@@ -5,7 +5,7 @@ import { reducerCases } from "@/context/constants";
 import { FaMicrophone } from "react-icons/fa";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
-import { FileIcon } from 'react-file-icon';
+import { AiFillFile } from "react-icons/ai";
 
 export default function ChatLIstItem({ data, isContactPage = false }) {
   const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
@@ -84,9 +84,7 @@ export default function ChatLIstItem({ data, isContactPage = false }) {
                   )}
                   {data.type === "file" && (
                     <span className="flex gap-1 items-center">
-                      <div className="flex h-4 w-4 text-panel-header-icon">
-                        <FileIcon color="#A8A8A8" type="document" radius={4} />
-                      </div>
+                      <AiFillFile className="text-panel-header-icon"/>
                       File
                     </span>
                   )}

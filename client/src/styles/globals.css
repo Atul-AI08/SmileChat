@@ -94,3 +94,12 @@
   display: block;
   margin: 0 auto;
 }
+
+.dissapearing-modal {
+  background: #202c33 !important;
+  max-width: 200px;
+  width: 100%;
+  min-height: 200px;
+  color: white;
+  border-radius: 7px;
+}
