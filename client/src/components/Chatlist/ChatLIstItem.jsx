@@ -24,7 +24,8 @@ export default function ChatLIstItem({ data, isContactPage = false }) {
           profilePicture: data.profilePicture,
           email: data.email,
           id: userInfo.id === data.senderId ? data.recieverId : data.senderId,
-          lastSeen: data.lastSeen
+          lastSeen: data.lastSeen,
+          groupId: data.groupId
         },
       });
     } else {
@@ -70,7 +71,7 @@ export default function ChatLIstItem({ data, isContactPage = false }) {
                 data?.about || "\u00A0"
               ) : (
                 <div className="flex items-center gap-1 max-w-[200px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[200px] xl:max-w-[300px]">
-                  {data.senderId === userInfo.id && (
+                  {data.senderId === userInfo.id && data.senderName === null && (
                     <MessageStatus messageStatus={data.messageStatus} />
                   )}
                   {data.type === "text" && (
@@ -78,13 +79,13 @@ export default function ChatLIstItem({ data, isContactPage = false }) {
                   )}
                   {data.type === "audio" && (
                     <span className="flex gap-1 items-center">
-                      <FaMicrophone className="text-panel-header-icon" />
+                      <FaMicrophone className="text-panel-header-icon-dark dark:text-panel-header-background-light" />
                       Audio
                     </span>
                   )}
                   {data.type === "file" && (
                     <span className="flex gap-1 items-center">
-                      <AiFillFile className="text-panel-header-icon"/>
+                      <AiFillFile className="text-panel-header-icon-dark dark:text-panel-header-background-light"/>
                       File
                     </span>
                   )}

@@ -59,6 +59,8 @@ export default function MessageBar() {
         params: {
           from: userInfo.id,
           to: currentChatUser.id,
+          group_: currentChatUser.groupId,
+          name: userInfo.name,
         },
       });
       if (response.status === 201) {
@@ -86,6 +88,8 @@ export default function MessageBar() {
       const { data } = await axios.post(ADD_MESSAGE_ROUTE, {
         to: currentChatUser.id,
         from: userInfo.id,
+        group_: currentChatUser.groupId,
+        name: userInfo.name,
         message,
       });
       socket.current.emit("send-msg", {

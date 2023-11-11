@@ -172,6 +172,8 @@ const AudioRecorder = ({ hide }) => {
         params: {
           from: userInfo.id,
           to: currentChatUser.id,
+          group_: currentChatUser.groupId,
+          name: userInfo.name,
         },
       });
       if (response.status === 201) {

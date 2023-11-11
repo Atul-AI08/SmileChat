@@ -2,11 +2,10 @@ import { useStateProvider } from "@/context/StateContext";
 import { HOST } from "@/utils/ApiRoutes";
 import { calculateTime } from "@/utils/CalculateTime";
 import React from "react";
-import MessageStatus from "../common/MessageStatus";
 import Image from "next/image";
 import { AiFillFile } from "react-icons/ai";
 
-export default function FileMessage({ message }) {
+export default function GroupFileMessage({ message }) {
   const [{ currentChatUser, userInfo }] = useStateProvider();
   const filePath = message.message;
   const parts = filePath.split("/");
@@ -16,29 +15,25 @@ export default function FileMessage({ message }) {
   const fileName = parts[parts.length-1].slice(13, parts[parts.length-1].length);
   return (
     <div
-      className={`text-white px-2 py-[5px] text-sm flex gap-2 items-end max-w-[65%] p-1 rounded-lg ${
+      className={`text-white px-2 py-[5px] text-sm flex flex-col max-w-[65%] rounded-lg ${
         message.senderId === currentChatUser.id
           ? "bg-incoming-background"
           : "bg-outgoing-background"
       }`}
     >
+      <div className="break-all text-blue-300">{message.senderName}</div>
       {(fileType==="png" || fileType==="jpg") && 
         <div className="relative">
           <Image
             src={`${HOST}/${message.message}`}
-            className="rounded-lg"
-            alt="asset"
+            className="rounded-lg mb-7"
+            alt=""
             height={300}
             width={300}
           />
-          <div className="absolute bottom-1 right-1 flex items-end gap-1">
+          <div className="absolute bottom-1 right-1 flex items-end">
             <span className="text-bubble-meta text-[11px] pt-1 min-w-fit">
               {calculateTime(message.createdAt)}
-            </span>
-            <span className="text-bubble-meta">
-              {message.senderId === userInfo.id && (
-                <MessageStatus messageStatus={message.messageStatus} />
-              )}
             </span>
           </div>
         </div>
@@ -51,14 +46,9 @@ export default function FileMessage({ message }) {
             className="h-26 m-2 rounded-md mb-7"
             alt=""
           />
-          <div className="absolute bottom-1 right-1 flex items-end gap-1">
+          <div className="absolute bottom-1 right-1 flex items-end">
             <span className="text-bubble-meta text-[11px] pt-1 min-w-fit">
               {calculateTime(message.createdAt)}
-            </span>
-            <span className="text-bubble-meta">
-              {message.senderId === userInfo.id && (
-                <MessageStatus messageStatus={message.messageStatus} />
-              )}
             </span>
           </div>
         </div>
@@ -72,14 +62,9 @@ export default function FileMessage({ message }) {
             className="h-96 w-auto m-1 rounded-md mb-7"
             alt=""
           />
-          <div className="absolute bottom-1 right-1 flex items-end gap-1">
+          <div className="absolute bottom-1 right-1 flex items-end">
             <span className="text-bubble-meta text-[11px] pt-1 min-w-fit">
               {calculateTime(message.createdAt)}
-            </span>
-            <span className="text-bubble-meta">
-              {message.senderId === userInfo.id && (
-                <MessageStatus messageStatus={message.messageStatus} />
-              )}
             </span>
           </div>
         </div>
@@ -90,14 +75,9 @@ export default function FileMessage({ message }) {
             <AiFillFile className="text-panel-header-icon-light dark:text-panel-header-icon-dark text-4xl m-1"/>
             <div className="mr-3"><a href={`${HOST}/${message.message}`} download>{fileName}</a></div>
           </span>
-          <div className="absolute bottom-1 right-1 flex items-end gap-1">
+          <div className="absolute bottom-1 right-1 flex items-end">
             <span className="text-bubble-meta text-[11px] pt-1 min-w-fit">
               {calculateTime(message.createdAt)}
-            </span>
-            <span className="text-bubble-meta">
-              {message.senderId === userInfo.id && (
-                <MessageStatus messageStatus={message.messageStatus} />
-              )}
             </span>
           </div>
         </div>

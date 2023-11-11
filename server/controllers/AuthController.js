@@ -76,7 +76,8 @@ export const getAllUsers = async (req, res, next) => {
         name: true,
         profilePicture: true,
         about: true,
-        lastSeen: true
+        lastSeen: true,
+        groupId: true
       },
     });
     const usersGroupedByInitialLetter = {};

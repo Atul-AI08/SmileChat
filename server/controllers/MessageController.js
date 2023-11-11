@@ -5,10 +5,10 @@ export const addMessage = async (req, res, next) => {
   try {
     const prisma = getPrismaInstance();
 
-    const { message, from, to } = req.body;
+    const { message, from, to, group_, name } = req.body;
     const getUser = onlineUsers.get(to);
 
-    if (message && from && to) {
+    if (message && from && to && group_===null) {
       const newMessage = await prisma.messages.create({
         data: {
           message: message,
@@ -17,6 +17,47 @@ export const addMessage = async (req, res, next) => {
           messageStatus: getUser ? "delivered" : "sent",
         },
         include: { sender: true, reciever: true },
+      });
+      return res.status(201).send({ message: newMessage });
+    }
+    else if (message && from && to) {
+      const newMessage = await prisma.messages.create({
+        data: {
+          message: message,
+          sender: { connect: { id: parseInt(from) } },
+          reciever: { connect: { id: parseInt(to) } },
+          messageStatus: "read",
+          senderName: name,
+        },
+        include: { sender: true, reciever: true },
+      });
+      const sendGroupMessage = async (id) => {
+        const temp = await prisma.messages.create({
+          data: {
+            message: message,
+            sender: { connect: { id: parseInt(to) } },
+            reciever: { connect: { id: id } },
+            senderName: name,
+          },
+          include: { sender: true, reciever: true },
+        });
+        const sendUserSocket = onlineUsers.get(id);
+        if (sendUserSocket) {
+          chatSocket
+            .to(sendUserSocket)
+            .emit("msg-recieve", { from: parseInt(to), message: temp });
+        }
+      };
+      const group = await prisma.group.findUnique({
+        where: {
+          id: parseInt(group_)
+        }
+      });
+      const groupMembers = group.groupMembers.split(";")
+      groupMembers.forEach((groupMember) => {
+        if (parseInt(groupMember)!==parseInt(from)){
+          sendGroupMessage(parseInt(groupMember));
+        }
       });
       return res.status(201).send({ message: newMessage });
     }
@@ -80,15 +121,60 @@ export const addFileMessage = async (req, res, next) => {
       let fileName = "uploads/files/" + date + req.file.originalname;
       renameSync(req.file.path, fileName);
       const prisma = getPrismaInstance();
-      const { from, to } = req.query;
-      if (from && to) {
+      const { from, to, group_, name } = req.query;
+      const getUser = onlineUsers.get(to);
+
+      if (from && to && group_===null) {
         const message = await prisma.messages.create({
           data: {
             message: fileName,
             sender: { connect: { id: parseInt(from) } },
             reciever: { connect: { id: parseInt(to) } },
             type: "file",
+            messageStatus: getUser ? "delivered" : "sent",
           },
+        });
+        return res.status(201).json({ message });
+      }
+      else if (from && to) {
+        const message = await prisma.messages.create({
+          data: {
+            message: fileName,
+            sender: { connect: { id: parseInt(from) } },
+            reciever: { connect: { id: parseInt(to) } },
+            type: "file",
+            messageStatus: "read",
+            senderName: name,
+          },
+        });
+        const sendGroupMessage = async (id) => {
+          const temp = await prisma.messages.create({
+            data: {
+              message: message,
+              sender: { connect: { id: parseInt(to) } },
+              reciever: { connect: { id: parseInt(id) } },
+              type: "file",
+              senderName: name,
+            },
+            include: { sender: true, reciever: true },
+          });
+          const sendUserSocket = onlineUsers.get(id);
+          if (sendUserSocket) {
+            chatSocket
+              .to(sendUserSocket)
+              .emit("msg-recieve", { from: parseInt(to), message: temp });
+          }
+        };
+        const group = await prisma.group.findUnique({
+          where: {
+            id: parseInt(group_)
+          }
+        });
+        const groupMembers = group.groupMembers.split(";")
+        groupMembers.forEach((groupMember) => {
+          if (parseInt(groupMember)!==parseInt(from)){
+            sendGroupMessage(groupMember);
+          }
         });
         return res.status(201).json({ message });
       }
@@ -107,15 +193,60 @@ export const addAudioMessage = async (req, res, next) => {
       let fileName = "uploads/recordings/" + date + req.file.originalname;
       renameSync(req.file.path, fileName);
       const prisma = getPrismaInstance();
-      const { from, to } = req.query;
-      if (from && to) {
+      const { from, to, group_, name } = req.query;
+      const getUser = onlineUsers.get(to);
+
+      if (from && to && group_===null) {
         const message = await prisma.messages.create({
           data: {
             message: fileName,
             sender: { connect: { id: parseInt(from) } },
             reciever: { connect: { id: parseInt(to) } },
             type: "audio",
+            messageStatus: getUser ? "delivered" : "sent",
           },
+        });
+        return res.status(201).json({ message });
+      }
+      else if (from && to) {
+        const message = await prisma.messages.create({
+          data: {
+            message: fileName,
+            sender: { connect: { id: parseInt(from) } },
+            reciever: { connect: { id: parseInt(to) } },
+            type: "audio",
+            messageStatus: "read",
+            senderName: name,
+          },
+        });
+        const sendGroupMessage = async (id) => {
+          const temp = await prisma.messages.create({
+            data: {
+              message: message,
+              sender: { connect: { id: parseInt(to) } },
+              reciever: { connect: { id: parseInt(id) } },
+              type: "audio",
+              senderName: name,
+            },
+            include: { sender: true, reciever: true },
+          });
+          const sendUserSocket = onlineUsers.get(id);
+          if (sendUserSocket) {
+            chatSocket
+              .to(sendUserSocket)
+              .emit("msg-recieve", { from: parseInt(to), message: temp });
+          }
+        };
+        const group = await prisma.group.findUnique({
+          where: {
+            id: parseInt(group_)
+          }
+        });
+        const groupMembers = group.groupMembers.split(";")
+        groupMembers.forEach((groupMember) => {
+          if (parseInt(groupMember)!==parseInt(from)){
+            sendGroupMessage(groupMember);
+          }
         });
         return res.status(201).json({ message });
       }
