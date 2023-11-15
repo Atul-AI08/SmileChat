@@ -36,6 +36,13 @@ export default function ChatListHeader() {
         router.push("/logout");
       },
     },
+    {
+      name: "Create Group",
+      callBack: async () => {
+        setIsContextMenuVisible(false);
+        router.push("/createGroup");
+      },
+    },
   ];
 
   const startVideoConference = () => {

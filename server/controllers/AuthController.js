@@ -1,5 +1,4 @@
 import getPrismaInstance from "../utils/PrismaClient.js";
-import { generateToken04 } from "../utils/TokenGenerator.js";
 
 export const checkUser = async (request, response, next) => {
   try {
@@ -118,6 +117,36 @@ export const updateProfile = async (request, response, next) => {
     });
 
     return response.json({ msg: "User updated successfully", status: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createGroup = async (request, response, next) => {
+  try {
+    const {
+      uid,
+      email,
+      name,
+      about = "Available",
+      image: profilePicture,
+    } = request.body;
+    if (!uid || !email || !name || !profilePicture) {
+      return response.json({
+        msg: "UserId, Email, Name and Image are required",
+      });
+    } else {
+      const prisma = getPrismaInstance();
+      const userId = String(uid);
+      const group = await prisma.group.create({
+        data: { groupMembers: userId },
+      });
+      var email1 = String(group.id) + email;
+      await prisma.user.create({
+        data: { email: email1, name, about, profilePicture, groupId: group.id },
+      });
+      return response.json({ msg: "Success", status: true });
+    }
   } catch (error) {
     next(error);
   }

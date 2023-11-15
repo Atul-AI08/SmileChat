@@ -52,9 +52,9 @@ export default function ContextMenu({
       }}
     >
       <ul>
-        {options.map(({ name, callBack }) => (
+        {options.map(({ name, callBack }, index) => (
           <>
-            <li
+            <li key={index}
               className="hover:bg-background-default-hover px-5 py-2 cursor-pointer"
               onClick={(e) => handleClick(e, callBack)}
             >
