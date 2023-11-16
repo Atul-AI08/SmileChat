@@ -12,7 +12,7 @@ const router = Router();
 
 router.post("/check-user", checkUser);
 router.post("/onBoardUser", onBoardUser);
-router.get("/get-contacts", getAllUsers);
+router.post("/get-contacts", getAllUsers);
 router.post("/update-last-seen", updateLastSeen);
 router.post("/update-profile", updateProfile);
 router.post("/create-group", createGroup);

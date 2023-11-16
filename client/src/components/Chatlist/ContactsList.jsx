@@ -7,7 +7,7 @@ import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
 import ChatLIstItem from "./ChatLIstItem";
 
 function ContactsList() {
-  const [{}, dispatch] = useStateProvider();
+  const [{ userInfo }, dispatch] = useStateProvider();
   const [allContacts, setAllContacts] = useState({});
   const [searchTerm, setsearchTerm] = useState("");
   const [searchContacts, setSearchContacts] = useState([]);
@@ -36,7 +36,9 @@ function ContactsList() {
       try {
         const {
           data: { users },
-        } = await axios.get(GET_ALL_CONTACTS);
+        } = await axios.post(GET_ALL_CONTACTS, {
+          id: userInfo.id
+        });
 
         setAllContacts(users);
         setSearchContacts(users);

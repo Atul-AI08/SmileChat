@@ -64,8 +64,11 @@ export const updateLastSeen = async (request, response, next) => {
   }
 };
 
-export const getAllUsers = async (req, res, next) => {
+export const getAllUsers = async (request, response, next) => {
   try {
+    const {
+      id,
+    } = request.body;
     const prisma = getPrismaInstance();
     const users = await prisma.user.findMany({
       orderBy: { name: "asc" },
@@ -79,16 +82,36 @@ export const getAllUsers = async (req, res, next) => {
         groupId: true
       },
     });
+    const groups = await prisma.group.findMany({
+      select: {
+        id: true,
+        groupMembers: true
+      },
+    });
     const usersGroupedByInitialLetter = {};
-    users.forEach((user) => {
+    users.forEach( async (user) => {
+      if (user.id === parseInt(id)){
+        return;
+      }
+      if (user.groupId !== null){
+        let flag = false;
+        groups.forEach((group) => {
+          if (group.id == user.groupId){
+            let members = group.groupMembers.split(";");
+            members.forEach((member) => {
+              if (parseInt(member) == id) flag = true;
+            })
+          }
+        })
+        if (flag === false) return;
+      }
       const initialLetter = user.name.charAt(0).toUpperCase();
       if (!usersGroupedByInitialLetter[initialLetter]) {
         usersGroupedByInitialLetter[initialLetter] = [];
       }
       usersGroupedByInitialLetter[initialLetter].push(user);
     });
-
-    return res.status(200).send({ users: usersGroupedByInitialLetter });
+    return response.status(200).send({ users: usersGroupedByInitialLetter });
   } catch (error) {
     next(error);
   }
