@@ -174,3 +174,41 @@ export const createGroup = async (request, response, next) => {
     next(error);
   }
 };
+
+export const addGroupMember = async (request, response, next) => {
+  try {
+    const {
+      groupId,
+      email,
+    } = request.body;
+    if (!email || !groupId) {
+      return response.json({
+        msg: "Email and groupId are required",
+      });
+    } else {
+      const prisma = getPrismaInstance();
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        return response.json({ msg: "User not found", status: false });
+      } else {
+        const group = await prisma.group.findUnique({ where: { id: groupId } });
+        let groupMembers = group.groupMembers.split(";");
+        if (groupMembers.includes(String(user.id))){
+          return response.json({ msg: "User already present", status: true });
+        }
+        let members = group.groupMembers + ";" + String(user.id);
+        await prisma.group.update({
+          data: {
+            groupMembers: members,
+          },
+          where: {
+            id: groupId,
+          },
+        });
+        return response.json({ msg: "Success", status: true });
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+};

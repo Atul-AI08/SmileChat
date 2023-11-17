@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Avatar from "../common/Avatar";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiSearchAlt2 } from "react-icons/bi";
+import { MdGroupAdd } from "react-icons/md";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import ContextMenu from "../common/ContextMenu";
@@ -9,12 +10,16 @@ import { calculateTime } from "@/utils/CalculateTime";
 import { PiClockCountdownFill } from 'react-icons/pi'
 import { Modal } from 'react-responsive-modal'
 import 'react-responsive-modal/styles.css'
+import { ADD_GROUP_MEMBER } from "@/utils/ApiRoutes";
+import axios from "axios";
 
 export default function ChatHeader() {
-  const [{ userInfo, currentChatUser, onlineUsers, messages }, dispatch] =
+  const [{ userInfo, currentChatUser, messages }, dispatch] =
     useStateProvider();
   
   const [open, setOpen] = useState(false)
+  const [open2, setOpen2] = useState(false)
+  const [addMember, setAddMember] = useState("");
   const [contextMenuCordinates, setContextMenuCordinates] = useState({
     x: 0,
     y: 0,
@@ -27,84 +32,137 @@ export default function ChatHeader() {
     setIsContextMenuVisible(true);
   };
 
-  const contextMenuOptions = [
-    {
-      name: "Exit",
-      callBack: async () => {
-        setIsContextMenuVisible(false);
-        dispatch({ type: reducerCases.SET_EXIT_CHAT });
-      },
-    },
-    {
-      name: "Export Chat",
-      callBack: async () => {
-        const filteredMessages = messages.filter(msg => msg.type !== 'file' && msg.type !== 'audio');
-        const formattedText = filteredMessages.map(({ id, senderId, receiverId, type, message, messageStatus, createdAt }) => {
-          let sender = (senderId == userInfo?.id) ? "Me" : currentChatUser?.name;
-          let reciever = (senderId == userInfo?.id) ? currentChatUser?.name : "Me";
-          return `Sender: ${sender}\nReceiver: ${reciever}\nMessage: ${message}\nMessage Status: ${messageStatus}\nSent : ${calculateTime(createdAt)}\n---------------------------------------\n`;
-        }).join('');
-        const file = new Blob([formattedText], {
-          type: 'text/plain'
-        });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(file);
-        a.download = `messages_${currentChatUser?.name}.txt`;
-        a.click();
-        URL.revokeObjectURL(a.href);
-      },
+    const contextMenuOptions = [
+        {
+            name: "Exit",
+            callBack: async () => {
+                setIsContextMenuVisible(false);
+                dispatch({ type: reducerCases.SET_EXIT_CHAT });
+            },
+        },
+        {
+            name: "Export Chat",
+            callBack: async () => {
+                const filteredMessages = messages.filter(msg => msg.type !== 'file' && msg.type !== 'audio');
+                const formattedText = filteredMessages.map(({ id, senderId, receiverId, type, message, messageStatus, createdAt }) => {
+                let sender = (senderId == userInfo?.id) ? "Me" : currentChatUser?.name;
+                let reciever = (senderId == userInfo?.id) ? currentChatUser?.name : "Me";
+                return `Sender: ${sender}\nReceiver: ${reciever}\nMessage: ${message}\nMessage Status: ${messageStatus}\nSent : ${calculateTime(createdAt)}\n---------------------------------------\n`;
+                }).join('');
+                const file = new Blob([formattedText], {
+                type: 'text/plain'
+                });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(file);
+                a.download = `messages_${currentChatUser?.name}.txt`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            },
+        }
+    ];
+
+    const onOpenModal = () => {
+        setOpen(true)
     }
-  ];
 
-  const onOpenModal = () => {
-    setOpen(true)
-  }
+    const onCloseModal = () => {
+        setOpen(false)
+    }
 
-  const onCloseModal = () => {
-    setOpen(false)
-  }
+    const onOpenModal2 = () => {
+        setOpen2(true)
+    }
 
-  const handleTimeSelection = (time) => {
-    onCloseModal()
-}
+    const onCloseModal2 = () => {
+        setAddMember("")
+        setOpen2(false)
+    }
 
-  return (
-  <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background-light dark:bg-panel-header-background-dark z-10">
-      <div className="flex items-center justify-center gap-6">
-        <Avatar type="sm" image={currentChatUser?.profilePicture} />
-        <span className="text-primary-strong">{currentChatUser?.name}</span>
-      </div>
-      <div className="flex gap-6 ">
-        <PiClockCountdownFill
-          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
-          onClick={onOpenModal}
-        />
-        <BiSearchAlt2
-          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
-          onClick={() => dispatch({ type: reducerCases.SET_MESSAGES_SEARCH })}
-        />
-        <BsThreeDotsVertical
-          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
-          onClick={(e) => showContextMenu(e)}
-          id="context-opener"
-        />
-        {isContextMenuVisible && (
-          <ContextMenu
-            options={contextMenuOptions}
-            cordinates={contextMenuCordinates}
-            contextMenu={isContextMenuVisible}
-            setContextMenu={setIsContextMenuVisible}
-          />
-        )}
-      </div>
-      <Modal
-          open={open}
-          onClose={onCloseModal}
-          classNames={{
-              modal: 'dissapearing-modal',
-          }}
-          center
-      >
+    const handleTimeSelection = (time) => {
+        onCloseModal()
+    }
+
+    const addGroupMember = async () => {
+        try {
+            setOpen2(false)
+            const { data } = await axios.post(ADD_GROUP_MEMBER, {
+                groupId: currentChatUser.groupId, 
+                email: addMember
+            });
+            setAddMember("")
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    return (
+    <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background-light dark:bg-panel-header-background-dark z-10">
+        <div className="flex items-center justify-center gap-6">
+            <Avatar type="sm" image={currentChatUser?.profilePicture} />
+            <span className="text-primary-strong">{currentChatUser?.name}</span>
+        </div>
+        <div className="flex gap-6 ">
+            <PiClockCountdownFill
+            className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+            onClick={onOpenModal}
+            />
+            <MdGroupAdd
+            className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+            onClick={onOpenModal2}
+            />
+            <BiSearchAlt2
+            className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+            onClick={() => dispatch({ type: reducerCases.SET_MESSAGES_SEARCH })}
+            />
+            <BsThreeDotsVertical
+            className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+            onClick={(e) => showContextMenu(e)}
+            id="context-opener"
+            />
+            {isContextMenuVisible && (
+            <ContextMenu
+                options={contextMenuOptions}
+                cordinates={contextMenuCordinates}
+                contextMenu={isContextMenuVisible}
+                setContextMenu={setIsContextMenuVisible}
+            />
+            )}
+        </div>
+        <Modal
+            open={open2}
+            onClose={onCloseModal2}
+            classNames={{ modal: 'dissapearing-modal' }}
+            center
+        >
+            <h2 className="text-2xl font-semibold mb-4 text-white">
+                Add Group Member
+            </h2>
+            <h3 className="text-xl font-semibold mb-4 text-white">
+                Enter the email of user:
+            </h3>
+            <div>
+                <div className="inline-flex items-center">
+                    <input
+                    type="text"
+                        value={addMember}
+                        onChange={(e) => setAddMember(e.target.value)}
+                        className="bg-input-background text-sm focus:outline-none text-white h-10 rounded-lg pl-5 pr-5 py-4 w-[500px]"
+                    />
+                    <button
+                        className="bg-search-input-container-background p-[11px] mx-2 rounded-lg"
+                        onClick={addGroupMember}
+                    >
+                    Add
+                    </button>
+                </div>
+            </div>
+        </Modal>
+        <Modal
+            open={open}
+            onClose={onCloseModal}
+            classNames={{ modal: 'dissapearing-modal' }}
+            center
+        >
           <h2 className="text-2xl font-semibold mb-4 text-white">
               Disappearing Message
           </h2>

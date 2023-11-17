@@ -9,6 +9,7 @@ export const GET_ALL_CONTACTS = `${authRoute}/get-contacts`;
 export const updateLastSeen = `${authRoute}/update-last-seen`;
 export const updateProfile = `${authRoute}/update-profile`;
 export const CREATE_GROUP = `${authRoute}/create-group`;
+export const ADD_GROUP_MEMBER = `${authRoute}/add-group-member`;
 
 export const ADD_MESSAGE_ROUTE = `${MESSAGES_ROUTE}/add-message`;
 export const GET_MESSAGES_ROUTE = `${MESSAGES_ROUTE}/get-messages`;
