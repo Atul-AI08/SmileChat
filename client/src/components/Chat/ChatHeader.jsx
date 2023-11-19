@@ -3,6 +3,7 @@ import Avatar from "../common/Avatar";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { MdCall } from "react-icons/md";
+import { FaFileExport } from "react-icons/fa6";
 import { IoVideocam } from "react-icons/io5";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
@@ -13,7 +14,7 @@ import { Modal } from 'react-responsive-modal'
 import 'react-responsive-modal/styles.css'
 
 export default function ChatHeader() {
-  const [{ userInfo, currentChatUser, onlineUsers,messages }, dispatch] =
+  const [{ currentChatUser, onlineUsers, messages }, dispatch] =
     useStateProvider();
   
   const [open, setOpen] = useState(false)
@@ -25,7 +26,7 @@ export default function ChatHeader() {
 
   const showContextMenu = (e) => {
     e.preventDefault();
-    setContextMenuCordinates({ x: e.pageX - 130, y: e.pageY + 20 });
+    setContextMenuCordinates({ x: e.pageX - 70, y: e.pageY + 20 });
     setIsContextMenuVisible(true);
   };
 
@@ -36,27 +37,23 @@ export default function ChatHeader() {
         setIsContextMenuVisible(false);
         dispatch({ type: reducerCases.SET_EXIT_CHAT });
       },
-    },
-    {
-      name: "Export Chat",
-      callBack: async () => {
-        const filteredMessages = messages.filter(msg => msg.type !== 'file' && msg.type !== 'audio');
-        const formattedText = filteredMessages.map(({ id, senderId, receiverId, type, message, messageStatus, createdAt }) => {
-          let sender = (senderId == userInfo?.id) ? "Me" : currentChatUser?.name;
-          let reciever = (senderId == userInfo?.id) ? currentChatUser?.name : "Me";
-          return `Sender: ${sender}\nReceiver: ${reciever}\nMessage: ${message}\nMessage Status: ${messageStatus}\nSent : ${calculateTime(createdAt)}\n---------------------------------------\n`;
-        }).join('');
-        const file = new Blob([formattedText], {
-          type: 'text/plain'
-        });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(file);
-        a.download = `messages_${currentChatUser?.name}.txt`;
-        a.click();
-        URL.revokeObjectURL(a.href);
-      },
     }
   ];
+
+  const exportChat = () => {
+    const filteredMessages = messages.filter(msg => msg.type !== 'file' && msg.type !== 'audio');
+    const formattedText = filteredMessages.map(({ id, senderId, senderName, receiverId, type, message, messageStatus, createdAt }) => {
+    return `Sender: ${senderName}\nMessage: ${message}\nSent : ${calculateTime(createdAt)}\n---------------------------------------\n`;
+    }).join('');
+    const file = new Blob([formattedText], {
+    type: 'text/plain'
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(file);
+    a.download = `messages_${currentChatUser?.name}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
 
   const handleVoiceCall = () => {
     dispatch({
@@ -117,6 +114,10 @@ export default function ChatHeader() {
         <PiClockCountdownFill
           className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
           onClick={onOpenModal}
+        />
+        <FaFileExport
+          className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+          onClick={exportChat}
         />
         <BiSearchAlt2
           className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"

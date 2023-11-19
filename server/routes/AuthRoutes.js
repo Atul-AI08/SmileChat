@@ -7,6 +7,7 @@ import {
   updateProfile,
   createGroup,
   addGroupMember,
+  leaveGroup,
 } from "../controllers/AuthController.js";
 
 const router = Router();
@@ -18,5 +19,6 @@ router.post("/update-last-seen", updateLastSeen);
 router.post("/update-profile", updateProfile);
 router.post("/create-group", createGroup);
 router.post("/add-group-member", addGroupMember);
+router.post("/leave-group", leaveGroup);
 
 export default router;

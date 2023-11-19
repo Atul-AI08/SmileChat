@@ -88,22 +88,15 @@ export const getAllUsers = async (request, response, next) => {
         groupMembers: true
       },
     });
+    let validGroups = [];
+    groups.forEach((group) => {
+      let groupMembers = group.groupMembers.split(";");
+      if (groupMembers.includes(String(id))) validGroups.push(group.id);
+    })
     const usersGroupedByInitialLetter = {};
-    users.forEach( async (user) => {
-      if (user.id === parseInt(id)){
+    users.forEach((user) => {
+      if ((user.id === parseInt(id)) || (user.groupId !== null && !validGroups.includes(user.groupId))){
         return;
-      }
-      if (user.groupId !== null){
-        let flag = false;
-        groups.forEach((group) => {
-          if (group.id == user.groupId){
-            let members = group.groupMembers.split(";");
-            members.forEach((member) => {
-              if (parseInt(member) == id) flag = true;
-            })
-          }
-        })
-        if (flag === false) return;
       }
       const initialLetter = user.name.charAt(0).toUpperCase();
       if (!usersGroupedByInitialLetter[initialLetter]) {
@@ -207,6 +200,58 @@ export const addGroupMember = async (request, response, next) => {
         });
         return response.json({ msg: "Success", status: true });
       }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const leaveGroup = async (request, response, next) => {
+  try {
+    const {
+      userId,
+      groupId,
+      uid,
+    } = request.body;
+    if (!userId || !uid || !groupId) {
+      return response.json({
+        msg: "UserId and groupId are required",
+      });
+    } else {
+      const prisma = getPrismaInstance();
+      const group = await prisma.group.findUnique({ where: { id: groupId } });
+      let groupMembers = group.groupMembers.split(";");
+      let members = "";
+      for (let i=0; i<groupMembers.length; i++) {
+        if (groupMembers[i] == String(uid)){
+          continue;
+        }
+        members += groupMembers[i] + ";";
+      }
+      members = members.slice(0, members.length-1);
+      await prisma.group.update({
+        data: {
+          groupMembers: members,
+        },
+        where: {
+          id: groupId,
+        },
+      });
+      await prisma.messages.deleteMany({
+        where: {
+          OR: [
+            {
+              senderId: parseInt(uid),
+              recieverId: parseInt(userId),
+            },
+            {
+              senderId: parseInt(userId),
+              recieverId: parseInt(uid),
+            },
+          ],
+        },
+      });
+      return response.json({ msg: "Success", status: true });
     }
   } catch (error) {
     next(error);

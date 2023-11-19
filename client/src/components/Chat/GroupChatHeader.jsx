@@ -3,6 +3,8 @@ import Avatar from "../common/Avatar";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { MdGroupAdd } from "react-icons/md";
+import { FaFileExport } from "react-icons/fa6";
+import { IoExit } from "react-icons/io5";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import ContextMenu from "../common/ContextMenu";
@@ -10,7 +12,7 @@ import { calculateTime } from "@/utils/CalculateTime";
 import { PiClockCountdownFill } from 'react-icons/pi'
 import { Modal } from 'react-responsive-modal'
 import 'react-responsive-modal/styles.css'
-import { ADD_GROUP_MEMBER } from "@/utils/ApiRoutes";
+import { ADD_GROUP_MEMBER, LEAVE_GROUP } from "@/utils/ApiRoutes";
 import axios from "axios";
 
 export default function ChatHeader() {
@@ -28,7 +30,7 @@ export default function ChatHeader() {
 
   const showContextMenu = (e) => {
     e.preventDefault();
-    setContextMenuCordinates({ x: e.pageX - 130, y: e.pageY + 20 });
+    setContextMenuCordinates({ x: e.pageX - 70, y: e.pageY + 20 });
     setIsContextMenuVisible(true);
   };
 
@@ -39,27 +41,23 @@ export default function ChatHeader() {
                 setIsContextMenuVisible(false);
                 dispatch({ type: reducerCases.SET_EXIT_CHAT });
             },
-        },
-        {
-            name: "Export Chat",
-            callBack: async () => {
-                const filteredMessages = messages.filter(msg => msg.type !== 'file' && msg.type !== 'audio');
-                const formattedText = filteredMessages.map(({ id, senderId, receiverId, type, message, messageStatus, createdAt }) => {
-                let sender = (senderId == userInfo?.id) ? "Me" : currentChatUser?.name;
-                let reciever = (senderId == userInfo?.id) ? currentChatUser?.name : "Me";
-                return `Sender: ${sender}\nReceiver: ${reciever}\nMessage: ${message}\nMessage Status: ${messageStatus}\nSent : ${calculateTime(createdAt)}\n---------------------------------------\n`;
-                }).join('');
-                const file = new Blob([formattedText], {
-                type: 'text/plain'
-                });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(file);
-                a.download = `messages_${currentChatUser?.name}.txt`;
-                a.click();
-                URL.revokeObjectURL(a.href);
-            },
         }
     ];
+
+    const exportChat = () => {
+        const filteredMessages = messages.filter(msg => msg.type !== 'file' && msg.type !== 'audio');
+        const formattedText = filteredMessages.map(({ id, senderId, senderName, receiverId, type, message, messageStatus, createdAt }) => {
+        return `Sender: ${senderName}\nMessage: ${message}\nSent : ${calculateTime(createdAt)}\n---------------------------------------\n`;
+        }).join('');
+        const file = new Blob([formattedText], {
+        type: 'text/plain'
+        });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(file);
+        a.download = `messages_${currentChatUser?.name}.txt`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
 
     const onOpenModal = () => {
         setOpen(true)
@@ -67,6 +65,10 @@ export default function ChatHeader() {
 
     const onCloseModal = () => {
         setOpen(false)
+    }
+    
+    const handleTimeSelection = (time) => {
+        onCloseModal()
     }
 
     const onOpenModal2 = () => {
@@ -78,10 +80,6 @@ export default function ChatHeader() {
         setOpen2(false)
     }
 
-    const handleTimeSelection = (time) => {
-        onCloseModal()
-    }
-
     const addGroupMember = async () => {
         try {
             setOpen2(false)
@@ -90,6 +88,19 @@ export default function ChatHeader() {
                 email: addMember
             });
             setAddMember("")
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const leaveGroup = async () => {
+        try {
+            const { data } = await axios.post(LEAVE_GROUP, {
+                userId: currentChatUser.id,
+                groupId: currentChatUser.groupId, 
+                uid: userInfo.id,
+            });
+            dispatch({ type: reducerCases.SET_EXIT_CHAT });
         } catch (err) {
             console.log(err);
         }
@@ -110,9 +121,17 @@ export default function ChatHeader() {
             className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
             onClick={onOpenModal2}
             />
+            <FaFileExport
+            className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+            onClick={exportChat}
+            />
             <BiSearchAlt2
             className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
             onClick={() => dispatch({ type: reducerCases.SET_MESSAGES_SEARCH })}
+            />
+            <IoExit
+            className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
+            onClick={leaveGroup}
             />
             <BsThreeDotsVertical
             className="text-panel-header-icon-light dark:text-panel-header-icon-dark cursor-pointer text-xl"
