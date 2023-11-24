@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "../common/Avatar";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiSearchAlt2 } from "react-icons/bi";
@@ -22,7 +22,7 @@ export default function ChatHeader() {
     const [open, setOpen] = useState(false)
     const [open2, setOpen2] = useState(false)
     const [addMember, setAddMember] = useState("");
-    const [disappearingMessageTime, setDisappearingMessageTime] = useState(disappearingTime)
+    const [disappearingMessageTime, setDisappearingMessageTime] = useState(0)
     const [contextMenuCordinates, setContextMenuCordinates] = useState({
         x: 0,
         y: 0,
@@ -34,6 +34,10 @@ export default function ChatHeader() {
         setContextMenuCordinates({ x: e.pageX - 70, y: e.pageY + 20 });
         setIsContextMenuVisible(true);
     };
+
+    useEffect(() => {
+        setDisappearingMessageTime(disappearingTime);
+    }, [disappearingTime])
 
     const contextMenuOptions = [
         {

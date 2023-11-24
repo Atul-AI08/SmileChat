@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useStateProvider } from "@/context/StateContext";
 import dynamic from "next/dynamic";
-const Container = dynamic(() => import("@/components/Call/Container"), {
+const AudioContainer = dynamic(() => import("@/components/Call/AudioContainer"), {
   ssr: false,
 });
 
@@ -23,7 +23,7 @@ function VoiceCall() {
       });
     }
   }, [voiceCall]);
-  return <Container data={voiceCall} />;
+  return <AudioContainer data={voiceCall} />;
 }
 
 export default VoiceCall;

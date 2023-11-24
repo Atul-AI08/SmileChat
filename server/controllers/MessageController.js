@@ -96,7 +96,7 @@ export const getMessages = async (req, res, next) => {
         user2: parseInt(to),
       }
     });
-    if (disappear[0] !== undefined){
+    if (disappear.length > 0){
       time += disappear[0].time;
     }
 
@@ -372,7 +372,7 @@ export const setDisappearingTime = async (req, res, next) => {
         user2: parseInt(to),
       }
     });
-    if (disappear == []){
+    if (disappear.length > 0){
       const _ = await prisma.disappear.updateMany({
         data: {
           time: parseInt(time),

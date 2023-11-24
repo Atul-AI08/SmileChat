@@ -1,7 +1,5 @@
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
-import axios from "axios";
-import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineCallEnd, MdMicOff, MdMic, MdVideocam, MdVideocamOff } from "react-icons/md";
 import {
