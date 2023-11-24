@@ -15,6 +15,12 @@ import VideoCall from "./Call/VideoCall";
 import VoiceCall from "./Call/VoiceCall";
 import IncomingCall from "./common/IncomingCall";
 import IncomingVideoCall from "./common/IncomingVideoCall";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// function App() {
+//   const notify = () => toast("Wow so easy !");
+// }
 
 export default function Main() {
   const [
@@ -105,6 +111,14 @@ export default function Main() {
             ...data.message,
           },
         });
+        // toast.success("New Message");
+        if (Notification.permission === 'granted') {
+          new Notification('New Message');
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+              new Notification('New Message Recieved');
+            }})}
       });
 
       socket.current.on("online-users", ({ onlineUsers }) => {
@@ -216,6 +230,7 @@ export default function Main() {
           )}
         </div>
       )}
+      <ToastContainer />
     </>
   );
 }
