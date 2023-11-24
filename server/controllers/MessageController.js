@@ -89,16 +89,16 @@ export const getMessages = async (req, res, next) => {
       },
     });
 
-    let time = 5;
-    // const disappear = await prisma.disappear.findUnique({
-    //   where: {
-    //     user1: from,
-    //     user2: to,
-    //   }
-    // });
-    // if (disappear){
-    //   time += disappear.time;
-    // }
+    let time = 0;
+    const disappear = await prisma.disappear.findMany({
+      where: {
+        user1: parseInt(from),
+        user2: parseInt(to),
+      }
+    });
+    if (disappear[0] !== undefined){
+      time += disappear[0].time;
+    }
 
     const unreadMessages = [];
 
@@ -365,47 +365,47 @@ export const getInitialContactsWithMessages = async (req, res, next) => {
 export const setDisappearingTime = async (req, res, next) => {
   try {
     const { from, to, time } = req.body;
-    // const prisma = getPrismaInstance();
-    // const disappear = await prisma.disappear.findUnique({
-    //   where: {
-    //     user1: from,
-    //     user2: to,
-    //   }
-    // });
-    // if (disappear){
-    //   const _ = await prisma.disappear.updateMany({
-    //     data: {
-    //       time: time,
-    //     },
-    //     where: {
-    //       OR: [
-    //         {
-    //           user1: parseInt(from),
-    //           user2: parseInt(to),
-    //         },
-    //         {
-    //           user1: parseInt(to),
-    //           user2: parseInt(from),
-    //         },
-    //       ],
-    //     },
-    //   });
-    // } else {
-    //   const _x = await prisma.disappear.create({
-    //     data: {
-    //       user1: from,
-    //       user2: to,
-    //       time: time,
-    //     },
-    //   });
-    //   const _y = await prisma.disappear.create({
-    //     data: {
-    //       user1: to,
-    //       user2: from,
-    //       time: time,
-    //     },
-    //   });
-    // }
+    const prisma = getPrismaInstance();
+    const disappear = await prisma.disappear.findMany({
+      where: {
+        user1: parseInt(from),
+        user2: parseInt(to),
+      }
+    });
+    if (disappear == []){
+      const _ = await prisma.disappear.updateMany({
+        data: {
+          time: parseInt(time),
+        },
+        where: {
+          OR: [
+            {
+              user1: parseInt(from),
+              user2: parseInt(to),
+            },
+            {
+              user1: parseInt(to),
+              user2: parseInt(from),
+            },
+          ],
+        },
+      });
+    } else {
+      const _x = await prisma.disappear.create({
+        data: {
+          user1: parseInt(from),
+          user2: parseInt(to),
+          time: parseInt(time),
+        },
+      });
+      const _y = await prisma.disappear.create({
+        data: {
+          user1: parseInt(to),
+          user2: parseInt(from),
+          time: parseInt(time),
+        },
+      });
+    }
 
     res.status(200).json({ msg: "Disappearing time updated successfully", status: true });
   } catch (err) {

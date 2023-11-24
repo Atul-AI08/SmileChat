@@ -77,18 +77,16 @@ export default function Main() {
     }
   };
 
-  // function beforeUnloadHandler(event) {
-  //   socket.current.emit("signout", userInfo.id);
-  //   updateLS(userInfo.id);
-  //   event.returnValue = 'Are you sure you want to leave?';
-  // }
-  // useEffect(() => {
-  //   window.addEventListener('beforeunload', beforeUnloadHandler);
+  function beforeUnloadHandler(event) {
+    socket.current.emit("signout", userInfo.id);
+  }
+  useEffect(() => {
+    window.addEventListener('beforeunload', beforeUnloadHandler);
 
-  //   return () => {
-  //     window.removeEventListener('beforeunload', beforeUnloadHandler);
-  //   };
-  // }, [userInfo]);
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+  }, [userInfo]);
 
   useEffect(() => {
     if (userInfo) {

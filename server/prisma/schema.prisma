@@ -41,6 +41,7 @@ model Group {
 }
 
 model Disappear {
+  id Int @id @default(autoincrement())
   user1 Int
   user2 Int
   time Int @default(0)
