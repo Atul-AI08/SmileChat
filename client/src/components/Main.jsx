@@ -1,7 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-
 import Chat from "@/components/Chat/Chat";
 import ChatList from "@/components/Chatlist/ChatList";
 import { firebaseAuth } from "../utils/FirebaseConfig";
@@ -61,7 +60,7 @@ export default function Main() {
       });
     }
   });
-  
+
   const updateLS = async (currentUser) => {
     if (currentUser !== undefined) {
       const currentDate = new Date();
@@ -76,7 +75,7 @@ export default function Main() {
     } else {
       console.log("userInfo.id is undefined, cannot make the request.");
     }
-  };  
+  };
 
   // function beforeUnloadHandler(event) {
   //   socket.current.emit("signout", userInfo.id);
@@ -168,16 +167,24 @@ export default function Main() {
   useEffect(() => {
     const getMessages = async () => {
       const {
-        data: { messages },
+        data: { time, messages },
       } = await axios.get(
         `${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`
       );
+      if (time > 0) {
+        const currentTime = new Date();
+        const thresholdTime = new Date(currentTime - time * 60000).toISOString();
+        const filteredMessages = messages.filter(message => message.createdAt >= thresholdTime);
+        messages.length = 0;
+        Array.prototype.push.apply(messages, filteredMessages);
+      }
+      dispatch({ type: reducerCases.SET_DISAPPEARING_TIME, disappearingTime: time });
       dispatch({ type: reducerCases.SET_MESSAGES, messages });
     };
     if (
       currentChatUser &&
       userContacts.findIndex((contact) => contact.id === currentChatUser.id) !==
-        -1
+      -1
     ) {
       getMessages();
     }

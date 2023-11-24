@@ -17,3 +17,4 @@ export const GET_MESSAGES_ROUTE = `${MESSAGES_ROUTE}/get-messages`;
 export const ADD_AUDIO_MESSAGE_ROUTE = `${MESSAGES_ROUTE}/add-audio-message`;
 export const ADD_FILE_MESSAGE_ROUTE = `${MESSAGES_ROUTE}/add-file-message`;
 export const GET_INITIAL_CONTACTS_ROUTE = `${MESSAGES_ROUTE}/get-initial-contacts`;
+export const DISAPPEARING_TIME = `${MESSAGES_ROUTE}/set-disappearing-time`;

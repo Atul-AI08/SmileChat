@@ -88,6 +88,18 @@ export const getMessages = async (req, res, next) => {
         id: "asc",
       },
     });
+
+    let time = 5;
+    // const disappear = await prisma.disappear.findUnique({
+    //   where: {
+    //     user1: from,
+    //     user2: to,
+    //   }
+    // });
+    // if (disappear){
+    //   time += disappear.time;
+    // }
+
     const unreadMessages = [];
 
     messages.forEach((message, index) => {
@@ -108,7 +120,7 @@ export const getMessages = async (req, res, next) => {
         messageStatus: "read",
       },
     });
-    res.status(200).json({ messages });
+    res.status(200).json({ time, messages });
   } catch (err) {
     next(err);
   }
@@ -345,6 +357,57 @@ export const getInitialContactsWithMessages = async (req, res, next) => {
       users: Array.from(users.values()),
       onlineUsers: Array.from(onlineUsers.keys()),
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const setDisappearingTime = async (req, res, next) => {
+  try {
+    const { from, to, time } = req.body;
+    // const prisma = getPrismaInstance();
+    // const disappear = await prisma.disappear.findUnique({
+    //   where: {
+    //     user1: from,
+    //     user2: to,
+    //   }
+    // });
+    // if (disappear){
+    //   const _ = await prisma.disappear.updateMany({
+    //     data: {
+    //       time: time,
+    //     },
+    //     where: {
+    //       OR: [
+    //         {
+    //           user1: parseInt(from),
+    //           user2: parseInt(to),
+    //         },
+    //         {
+    //           user1: parseInt(to),
+    //           user2: parseInt(from),
+    //         },
+    //       ],
+    //     },
+    //   });
+    // } else {
+    //   const _x = await prisma.disappear.create({
+    //     data: {
+    //       user1: from,
+    //       user2: to,
+    //       time: time,
+    //     },
+    //   });
+    //   const _y = await prisma.disappear.create({
+    //     data: {
+    //       user1: to,
+    //       user2: from,
+    //       time: time,
+    //     },
+    //   });
+    // }
+
+    res.status(200).json({ msg: "Disappearing time updated successfully", status: true });
   } catch (err) {
     next(err);
   }

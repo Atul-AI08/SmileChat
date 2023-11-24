@@ -5,6 +5,7 @@ import {
     addAudioMessage,
     addFileMessage,
     getInitialContactsWithMessages,
+    setDisappearingTime,
 } from "../controllers/MessageController.js";
 import multer from "multer";
 
@@ -14,6 +15,7 @@ const upload = multer({ dest: "uploads/recordings/" });
 const uploadImage = multer({ dest: "uploads/files/" });
 
 router.post("/add-message", addMessage);
+router.post("/set-disappearing-time", setDisappearingTime);
 router.get("/get-messages/:from/:to", getMessages); 
 router.get("/get-initial-contacts/:from", getInitialContactsWithMessages);
 

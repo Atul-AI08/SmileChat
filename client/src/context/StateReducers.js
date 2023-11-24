@@ -16,6 +16,7 @@ export const initialState = {
   onlineUsers: [],
   contactSearch: "",
   filteredContacts: [],
+  disappearingTime: 0,
 };
 
 const reducer = (state, action) => {
@@ -282,6 +283,11 @@ const reducer = (state, action) => {
         filteredContacts,
       };
     }
+    case reducerCases.SET_DISAPPEARING_TIME:
+      return {
+        ...state,
+        disappearingTime: action.disappearingTime,
+      };
     default:
       return state;
   }

@@ -39,3 +39,9 @@ model Group {
   id Int @id @default(autoincrement())
   groupMembers String
 }
+
+model Disappear {
+  user1 Int
+  user2 Int
+  time Int @default(0)
+}
