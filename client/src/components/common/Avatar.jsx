@@ -54,7 +54,9 @@ export default function Avatar({ type, image, setImage }) {
       const data = document.getElementById("photo-picker");
       data.click();
       document.body.onfocus = (e) => {
-        setGrabImage(false);
+        setTimeout(() => {
+          setGrabImage(false);
+        }, 1000);
       };
     }
   }, [grabImage]);

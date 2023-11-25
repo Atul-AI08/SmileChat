@@ -8,7 +8,7 @@ export const addMessage = async (req, res, next) => {
     const { message, from, to, group_, name } = req.body;
     const getUser = onlineUsers.get(to);
 
-    if (message && from && to && group_===null) {
+    if (message && from && to && !group_) {
       const newMessage = await prisma.messages.create({
         data: {
           message: message,
@@ -136,7 +136,7 @@ export const addFileMessage = async (req, res, next) => {
       const { from, to, group_, name } = req.query;
       const getUser = onlineUsers.get(to);
 
-      if (from && to && group_===null) {
+      if (from && to && !group_) {
         const message = await prisma.messages.create({
           data: {
             message: fileName,
@@ -208,7 +208,7 @@ export const addAudioMessage = async (req, res, next) => {
       const { from, to, group_, name } = req.query;
       const getUser = onlineUsers.get(to);
 
-      if (from && to && group_===null) {
+      if (from && to && !group_) {
         const message = await prisma.messages.create({
           data: {
             message: fileName,

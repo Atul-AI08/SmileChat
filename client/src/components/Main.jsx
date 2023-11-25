@@ -18,10 +18,6 @@ import IncomingVideoCall from "./common/IncomingVideoCall";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// function App() {
-//   const notify = () => toast("Wow so easy !");
-// }
-
 export default function Main() {
   const [
     {
@@ -111,7 +107,6 @@ export default function Main() {
             ...data.message,
           },
         });
-        // toast.success("New Message");
         const message = data.message.message;
         if (Notification.permission === 'granted') {
           new Notification('New Message From WebChat-Pro!', { body: message });
