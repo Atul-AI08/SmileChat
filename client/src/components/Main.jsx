@@ -112,8 +112,9 @@ export default function Main() {
           },
         });
         // toast.success("New Message");
+        const message = data.message.message;
         if (Notification.permission === 'granted') {
-          new Notification('New Message From WebChat-Pro!');
+          new Notification('New Message From WebChat-Pro!', { body: message });
         } else if (Notification.permission !== 'denied') {
           Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
