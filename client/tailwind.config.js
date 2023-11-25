@@ -22,12 +22,13 @@ module.exports = {
         "icon-green": "#00a884",
         "search-input-container-background": "#111b21",
         "conversation-border": "rgba(134,150,160,0.15)",
-        "conversation-panel-background": "#0b141a",
+        "conversation-panel-background-dark": "#0b141a",
         "background-default-hover": "#202c33",
         "incoming-background": "#202c33",
         "outgoing-background": "#005c4b",
         "bubble-meta": "hsla(0,0%,100%,0.6)",
         "icon-ack": "#53bdeb",
+        "conversation-panel-background-light":"#bfbfbf"
       },
       gridTemplateColumns: {
         main: "1fr 2.4fr",

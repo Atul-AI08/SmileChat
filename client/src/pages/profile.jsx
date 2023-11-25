@@ -85,7 +85,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark h-screen w-screen text-white flex flex-col items-center justify-center">
+    <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark h-screen w-screen text-gray-800 dark:text-white flex flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-2">
         <Image
           src="/whatsapp.gif"
@@ -103,13 +103,13 @@ export default function Profile() {
           <Input name="About" state={about} setState={setAbout} label />
           <div className="flex items-center justify-center gap-2">
             <button
-              className="bg-search-input-container-background p-5 rounded-lg"
+              className="bg-slate-200 dark:bg-search-input-container-background p-5 rounded-lg"
               onClick={back}
               >
               Back
             </button>
             <button
-              className="bg-search-input-container-background p-5 rounded-lg"
+              className="bg-slate-200 dark:bg-search-input-container-background p-5 rounded-lg"
               onClick={updateUserProfile}
             >
               Update Profile

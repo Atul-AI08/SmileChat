@@ -134,7 +134,7 @@ export default function ChatHeader() {
       <div className="flex items-center justify-center gap-6">
         <Avatar type="sm" image={currentChatUser?.profilePicture} />
         <div className="flex flex-col">
-          <span className="text-primary-strong">{currentChatUser?.name}</span>
+          <span className="text-panel-header-icon-light  dark:text-primary-strong">{currentChatUser?.name}</span>
           <span className="text-secondary text-sm">
             {onlineUsers.includes(currentChatUser.id) ? "Online" : "Last seen at " + calculateTime(currentChatUser?.lastSeen)}
           </span>

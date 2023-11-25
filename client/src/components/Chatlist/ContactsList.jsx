@@ -52,7 +52,7 @@ function ContactsList() {
   return (
     <div className="h-full flex flex-col">
       <div className="h-24 flex items-end px-3 py-4">
-        <div className="flex  items-center gap-12 text-white">
+        <div className="flex  items-center gap-12 text-gray-700 dark:text-white">
           <BiArrowBack
             className=" cursor-pointer text-xl"
             onClick={() =>

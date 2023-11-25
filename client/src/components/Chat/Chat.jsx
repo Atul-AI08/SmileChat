@@ -9,7 +9,7 @@ import { useStateProvider } from "@/context/StateContext";
 export default function Chat() {
   const [{ currentChatUser }] = useStateProvider();
   return (
-    <div className="border-conversation-border border-l w-full bg-conversation-panel-background flex flex-col h-[100vh] z-10 ">
+    <div className="border-conversation-border border-l w-full bg-conversation-panel-background-light dark:bg-conversation-panel-background-dark flex flex-col h-[100vh] z-10 ">
       {currentChatUser.groupId!==null? <GroupChatHeader />:<ChatHeader />}
       {currentChatUser.groupId!==null? <GroupChatContainer />:<ChatContainer />}
       <MessageBar />
