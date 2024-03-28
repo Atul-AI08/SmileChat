@@ -63,12 +63,11 @@ export default function Login() {
     <div className="flex justify-center items-center bg-panel-header-background-light dark:bg-panel-header-background-dark h-screen w-screen flex-col gap-6">
       <div className="flex items-center justify-center gap-2 text-white">
         <Image
-          src="/whatsapp.gif"
-          alt="whatsapp-gif"
+          src="/icon.png"
           height={300}
           width={300}
         />
-        <span className="text-7xl">Webchat-pro</span>
+        <span className="text-7xl">SmileChat</span>
       </div>
       <button
         className="flex items-center justify-center gap-7 bg-search-input-container-background p-5 rounded-lg"

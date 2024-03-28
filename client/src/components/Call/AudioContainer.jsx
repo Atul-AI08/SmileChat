@@ -34,7 +34,7 @@ function AudioContainer({ data }) {
     }, [callAccepted]);
 
     return (
-        <div className="border-conversation-border border-l w-full bg-conversation-panel-background flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white ">
+        <div className="border-conversation-border border-l w-full bg-conversation-panel-background-light dark:bg-conversation-panel-background-dark flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white ">
             <div className="flex flex-col gap-3 items-center">
                 <span className="text-5xl">{data.name}</span>
                 <span className="text-lg">

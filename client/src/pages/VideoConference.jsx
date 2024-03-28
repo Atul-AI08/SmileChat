@@ -21,7 +21,7 @@ const App = () => {
   const [inCall, setInCall] = useState(false);
   const [channelName, setChannelName] = useState("");
   return (
-    <div className="border-conversation-border border-l w-full bg-conversation-panel-background flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white">
+    <div className="border-conversation-border border-l w-full bg-conversation-panel-background-light dark:bg-conversation-panel-background-dark flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white">
       {inCall ? (
         <VideoCall setInCall={setInCall} channelName={channelName} />
       ) : (
@@ -192,17 +192,16 @@ const ChannelForm = (props) => {
     <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark h-screen w-screen text-white flex flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-2">
         <Image
-          src="/whatsapp.gif"
-          alt="whatsapp-gif"
+          src="/icon.png"
           height={240}
           width={240}
         />
-        <span className="text-6xl">WhatsApp</span>
+        <span className="text-6xl">SmileChat</span>
       </div>
       <div></div>
       <div className="flex gap-6 mt-6 ">
         <div className="flex flex-col items-center justify-between mt-5 gap-6">
-          <Input name="Enter Channel Name"
+          <Input name="Enter Room ID"
             state={channelName}
             setState={setChannelName} label
           />

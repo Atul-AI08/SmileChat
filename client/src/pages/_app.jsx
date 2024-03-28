@@ -32,8 +32,8 @@ export default function App({ Component, pageProps }) {
   return (
     <StateProvider initialState={initialState} reducer={reducer}>
       <Head>
-        <title>Webchat-Pro</title>
-        <link rel="shortcut icon" href="/favicon.png" />
+        <title>SmileChat</title>
+        <link rel="shortcut icon" href="/toplogo.png" />
       </Head>
       <Component {...pageProps} />
     </StateProvider>

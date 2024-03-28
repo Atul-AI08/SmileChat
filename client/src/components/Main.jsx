@@ -15,8 +15,6 @@ import VideoCall from "./Call/VideoCall";
 import VoiceCall from "./Call/VoiceCall";
 import IncomingCall from "./common/IncomingCall";
 import IncomingVideoCall from "./common/IncomingVideoCall";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export default function Main() {
   const [
@@ -63,21 +61,25 @@ export default function Main() {
     }
   });
 
-  const updateLS = async (currentUser) => {
-    if (currentUser !== undefined) {
-      const currentDate = new Date();
-      try {
-        const { data } = await axios.post(updateLastSeen, {
-          userId: currentUser,
-          currentDate: currentDate,
-        });
-      } catch (error) {
-        console.log({ error });
+  
+  useEffect(() => {
+    const updateLS = async () => {
+      if (userInfo !== undefined) {
+        const currentDate = new Date();
+        try {
+          const { data } = await axios.post(updateLastSeen, {
+            userId: userInfo.id,
+            currentDate: currentDate,
+          });
+        } catch (error) {
+          console.log({ error });
+        }
+      } else {
+        console.log("userInfo.id is undefined, cannot make the request.");
       }
-    } else {
-      console.log("userInfo.id is undefined, cannot make the request.");
-    }
-  };
+    };
+    updateLS();
+  }, [currentChatUser])
 
   function beforeUnloadHandler(event) {
     socket.current.emit("signout", userInfo.id);
@@ -109,12 +111,14 @@ export default function Main() {
         });
         const message = data.message.message;
         if (Notification.permission === 'granted') {
-          new Notification('New Message From WebChat-Pro!', { body: message });
+          new Notification('New Message From ChatSphere!', { body: message, vibrate: [200, 100, 200] });
         } else if (Notification.permission !== 'denied') {
           Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
               new Notification('New Message Recieved');
-            }})}
+            }
+          })
+        }
       });
 
       socket.current.on("online-users", ({ onlineUsers }) => {
@@ -226,7 +230,6 @@ export default function Main() {
           )}
         </div>
       )}
-      <ToastContainer />
     </>
   );
 }

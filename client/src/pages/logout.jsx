@@ -17,7 +17,7 @@ function logout() {
     signOut(firebaseAuth);
     router.push("/login");
   }, [socket]);
-  return <div className="bg-conversation-panel-background"></div>;
+  return <div className="bg-conversation-panel-background-light dark:bg-conversation-panel-background-dark"></div>;
 }
 
 export default logout;

@@ -86,12 +86,11 @@ export default function OnBoarding() {
     <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark h-screen w-screen text-white flex flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-2">
         <Image
-          src="/whatsapp.gif"
-          alt="whatsapp-gif"
-          height={300}
-          width={300}
+          src="/icon.png"
+          height={240}
+          width={240}
         />
-        <span className="text-7xl">WhatsApp</span>
+        <span className="text-7xl">SmileChat</span>
       </div>
       <div></div>
       <h2 className="text-2xl ">Create your profile</h2>

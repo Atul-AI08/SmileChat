@@ -34,7 +34,7 @@ function Container({ data }){
   }, [callAccepted]);
 
   return (
-    <div className="border-conversation-border border-l w-full bg-conversation-panel-background flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white ">
+    <div className="border-conversation-border border-l w-full bg-conversation-panel-background-light dark:bg-conversation-panel-background-dark flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white ">
       <span className="text-5xl">{data.name}</span>
       {(
         <VideoCall data={data} setInCall={setCallStarted} channelName={channelName} />

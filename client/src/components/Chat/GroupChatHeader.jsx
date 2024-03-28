@@ -146,7 +146,7 @@ export default function ChatHeader() {
         <div className="h-16 px-4 py-3 flex justify-between items-center bg-panel-header-background-light dark:bg-panel-header-background-dark z-10">
             <div className="flex items-center justify-center gap-6">
                 <Avatar type="sm" image={currentChatUser?.profilePicture} />
-                <span className="text-primary-strong">{currentChatUser?.name}</span>
+                <span className="text-black dark:text-primary-strong">{currentChatUser?.name}</span>
             </div>
             <div className="flex gap-6 ">
                 <PiClockCountdownFill

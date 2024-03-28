@@ -88,12 +88,11 @@ export default function Profile() {
     <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark h-screen w-screen text-gray-800 dark:text-white flex flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-2">
         <Image
-          src="/whatsapp.gif"
-          alt="whatsapp-gif"
-          height={300}
-          width={300}
+          src="/icon.png"
+          height={200}
+          width={200}
         />
-        <span className="text-7xl">Webchat-Pro</span>
+        <span className="text-7xl">SmileChat</span>
       </div>
       <div></div>
       <h2 className="text-2xl ">Your profile</h2>

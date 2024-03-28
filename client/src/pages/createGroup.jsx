@@ -15,7 +15,7 @@ export default function OnBoarding() {
 
   const [{ userInfo }] = useStateProvider();
 
-  const [image, setImage] = useState("/default_avatar.png");
+  const [image, setImage] = useState("/group.png");
   const [name, setName] = useState("");
   const [about, setAbout] = useState(".");
 
@@ -75,19 +75,17 @@ export default function OnBoarding() {
     <div className="bg-panel-header-background-light dark:bg-panel-header-background-dark h-screen w-screen text-white flex flex-col items-center justify-center">
       <div className="flex items-center justify-center gap-2">
         <Image
-          src="/whatsapp.gif"
-          alt="whatsapp-gif"
+          src="/icon.png"
           height={240}
           width={240}
         />
-        <span className="text-5xl">WebChat Pro</span>
+        <span className="text-5xl">SmileChat</span>
       </div>
       <div></div>
       <h2 className="text-2xl ">Create Group</h2>
       <div className="flex gap-6 mt-6 ">
         <div className="flex flex-col items-center justify-between mt-5 gap-6">
           <Input name="Group Name" state={name} setState={setName} label />
-          {/* <Input name="About" state={about} setState={setAbout} label /> */}
           <div className="flex items-center justify-center gap-2">
             <button
               className="bg-search-input-container-background p-5 rounded-lg"

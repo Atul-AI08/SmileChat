@@ -25,7 +25,7 @@ function SearchMessages() {
   }, [searchTerm]);
 
   return (
-    <div className="border-conversation-border border-l w-full bg-conversation-panel-background flex flex-col  z-10 max-h-screen ">
+    <div className="border-conversation-border border-l w-full bg-conversation-panel-background-light dark:bg-conversation-panel-background-dark flex flex-col  z-10 max-h-screen ">
       <div className="h-16 px-4 py-5 flex  gap-10 items-center bg-panel-header-background text-primary-strong">
         <IoClose
           className="cursor-pointer text-icon-lighter text-2xl"
